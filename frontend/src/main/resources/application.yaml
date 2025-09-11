@@ -1,4 +1,11 @@
 spring:
+  data:
+    redis:
+      host: 192.168.150.101
+      port: 26379
+      password: 123456
+      client-type: jedis
+
   application:
     name: spring-ai-demo
   servlet:
@@ -6,11 +13,14 @@ spring:
       max-file-size: 30MB
       max-request-size: 40MB
   ai:
-    deepseek:
-      api-key: ${DEEPSEEK_API_KEY} # 获取 DeepSeek API Key
-      chat:
-        options:
-          model: deepseek-chat # 模型名称，默认为 deepseek-chat，可以不配
+    vectorstore: #向量库配置
+      # elasticsearch: #使用ES作为向量库存储
+      #   initialize-schema: true  #开启初始化向量库结构
+      #   dimensions: 1024  #向量维度维度
+      redis:
+        initialize-schema: true
+        index: spring-ai-index
+        prefix: "embedding:"
     chat:
       memory:
         repository:

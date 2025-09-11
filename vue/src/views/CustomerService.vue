@@ -10,19 +10,20 @@
           </button>
         </div>
         <div class="history-list">
-          <div 
-            v-for="chat in chatHistory" 
-            :key="chat.id"
-            class="history-item"
-            :class="{ 'active': currentChatId === chat.id }"
-            @click="loadChat(chat.id)"
+          <div
+              v-for="chat in chatHistory"
+              :key="chat.id"
+              class="history-item"
+              :class="{ 'active': currentChatId === chat.id }"
+              @click="loadChat(chat.id)"
           >
             <ChatBubbleLeftRightIcon class="icon" />
             <span class="title">{{ chat.title || '新咨询' }}</span>
+            <button class="delete-btn" @click.stop="confirmDelete(chat)">删除</button>
           </div>
         </div>
       </div>
-      
+
       <div class="chat-main">
         <div class="service-header">
           <div class="service-info">
@@ -36,25 +37,25 @@
 
         <div class="messages" ref="messagesRef">
           <ChatMessage
-            v-for="(message, index) in currentMessages"
-            :key="index"
-            :message="message"
-            :is-stream="isStreaming && index === currentMessages.length - 1"
+              v-for="(message, index) in currentMessages"
+              :key="index"
+              :message="message"
+              :is-stream="isStreaming && index === currentMessages.length - 1"
           />
         </div>
-        
+
         <div class="input-area">
           <textarea
-            v-model="userInput"
-            @keydown.enter.prevent="sendMessage()"
-            placeholder="请输入您的问题..."
-            rows="1"
-            ref="inputRef"
+              v-model="userInput"
+              @keydown.enter.prevent="sendMessage()"
+              placeholder="请输入您的问题..."
+              rows="1"
+              ref="inputRef"
           ></textarea>
-          <button 
-            class="send-button" 
-            @click="sendMessage()"
-            :disabled="isStreaming || !userInput.trim()"
+          <button
+              class="send-button"
+              @click="sendMessage()"
+              :disabled="isStreaming || !userInput.trim()"
           >
             <PaperAirplaneIcon class="icon" />
           </button>
@@ -70,6 +71,19 @@
         <button @click="showBookingModal = false">确定</button>
       </div>
     </div>
+
+    <!-- 确认删除对话框 -->
+    <div class="confirm-dialog" v-if="showConfirmDialog">
+      <div class="confirm-box">
+        <h3 class="confirm-title">确认删除</h3>
+        <p class="confirm-message">确定要删除 "{{ chatToDelete?.title || '未命名对话' }}" 吗？此操作不可恢复。</p>
+        <div class="confirm-buttons">
+          <button class="confirm-btn cancel" @click="showConfirmDialog = false">取消</button>
+          <button class="confirm-btn delete" @click="deleteChat">确认删除</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
@@ -78,8 +92,8 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useDark } from '@vueuse/core'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
-import { 
-  ChatBubbleLeftRightIcon, 
+import {
+  ChatBubbleLeftRightIcon,
   PaperAirplaneIcon,
   PlusIcon,
   ComputerDesktopIcon
@@ -97,7 +111,9 @@ const currentMessages = ref([])
 const chatHistory = ref([])
 const showBookingModal = ref(false)
 const bookingInfo = ref('')
-
+const showConfirmDialog = ref(false);
+const chatToDelete = ref(null);
+// const currentChatId = ref(1);
 // 配置 marked
 marked.setOptions({
   breaks: true,  // 支持换行
@@ -125,10 +141,10 @@ const scrollToBottom = async () => {
 // 发送消息
 const sendMessage = async (content) => {
   if (isStreaming.value || (!content && !userInput.value.trim())) return
-  
+
   // 使用传入的 content 或用户输入框的内容
   const messageContent = content || userInput.value.trim()
-  
+
   // 添加用户消息
   const userMessage = {
     role: 'user',
@@ -136,14 +152,14 @@ const sendMessage = async (content) => {
     timestamp: new Date()
   }
   currentMessages.value.push(userMessage)
-  
+
   // 清空输入
   if (!content) {  // 只有在非传入内容时才清空输入框
     userInput.value = ''
     adjustTextareaHeight()
   }
   await scrollToBottom()
-  
+
   // 添加助手消息占位
   const assistantMessage = {
     role: 'assistant',
@@ -153,21 +169,21 @@ const sendMessage = async (content) => {
   }
   currentMessages.value.push(assistantMessage)
   isStreaming.value = true
-  
+
   let accumulatedContent = ''
-  
+
   try {
     const reader = await chatAPI.sendServiceMessage(messageContent, currentChatId.value)
     const decoder = new TextDecoder('utf-8')
-    
+
     while (true) {
       try {
         const { value, done } = await reader.read()
         if (done) break
-        
+
         // 累积新内容
         accumulatedContent += decoder.decode(value)
-        
+
         await nextTick(() => {
           // 更新消息
           const updatedMessage = {
@@ -191,11 +207,11 @@ const sendMessage = async (content) => {
       if (bookingMatch) {
         // 使用 marked 处理预约信息中的 Markdown
         bookingInfo.value = DOMPurify.sanitize(
-          marked.parse(bookingMatch[1]),
-          {
-            ADD_TAGS: ['code', 'pre', 'span'],
-            ADD_ATTR: ['class', 'language']
-          }
+            marked.parse(bookingMatch[1]),
+            {
+              ADD_TAGS: ['code', 'pre', 'span'],
+              ADD_ATTR: ['class', 'language']
+            }
         )
         showBookingModal.value = true
       }
@@ -208,6 +224,7 @@ const sendMessage = async (content) => {
     await scrollToBottom()
   }
 }
+
 
 // 加载特定对话
 const loadChat = async (chatId) => {
@@ -228,11 +245,13 @@ const loadChat = async (chatId) => {
 const loadChatHistory = async () => {
   try {
     const history = await chatAPI.getChatHistory('service')
+    console.log('聊天历史:', history)
     chatHistory.value = history || []
+    console.log('聊天历史2:', chatHistory)
     if (history && history.length > 0) {
       await loadChat(history[0].id)
     } else {
-      await startNewChat()  // 等待 startNewChat 完成
+      // await startNewChat()  // 等待 startNewChat 完成
     }
   } catch (error) {
     console.error('加载聊天历史失败:', error)
@@ -241,17 +260,48 @@ const loadChatHistory = async () => {
   }
 }
 
+const confirmDelete = (chat) => {
+  // 阻止事件冒泡，避免触发loadChat
+  event.stopPropagation();
+  chatToDelete.value = chat;
+  showConfirmDialog.value = true;
+};
+
+const deleteChat = () => {
+  if (chatToDelete.value) {
+    const index = chatHistory.value.findIndex(chat => chat.id === chatToDelete.value.id);
+    if (index !== -1) {
+      chatHistory.value.splice(index, 1);
+
+      // 如果删除的是当前选中的聊天，清空当前聊天
+      if (currentChatId.value === chatToDelete.value.id) {
+        currentChatId.value = null;
+        // currentChat.value = null;
+        // startNewChat();
+        // loadChat(chatHistory[0].id)
+      }
+      chatAPI.deleteChat(chatToDelete.value.id, 'service')
+    }
+
+  }
+
+  showConfirmDialog.value = false;
+  chatToDelete.value = null;
+};
+
 // 开始新对话
 const startNewChat = async () => {  // 添加 async
   const newChatId = Date.now().toString()
   currentChatId.value = newChatId
   currentMessages.value = []
-  
+
   // 添加新对话到历史列表
   const newChat = {
     id: newChatId,
-    title: `咨询 ${newChatId.slice(-6)}`
+    title: `咨询 ${newChatId.slice(-6)}`,
+    type: 'service'
   }
+  await chatAPI.createNewChat(newChat)
   chatHistory.value = [newChat, ...chatHistory.value]
 
   // 发送初始问候语
@@ -286,7 +336,85 @@ onMounted(() => {
     height: 100%;
     overflow: hidden;
   }
-
+  .delete-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+  .history-item:hover .delete-btn {
+    opacity: 1;
+  }
+  .delete-btn:hover {
+    background: #ff2e43;
+    transform: scale(1.05);
+  }
+  .delete-btn:active {
+    transform: scale(0.95);
+  }
+  .confirm-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .confirm-box {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  .confirm-title {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+  .confirm-message {
+    color: #7f8c8d;
+    margin-bottom: 20px;
+  }
+  .confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  .confirm-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .confirm-btn.cancel {
+    background: #bdc3c7;
+    color: #2c3e50;
+  }
+  .confirm-btn.delete {
+    background: #ff4757;
+    color: white;
+  }
+  .confirm-btn.cancel:hover {
+    background: #a4b0be;
+  }
+  .confirm-btn.delete:hover {
+    background: #ff2e43;
+  }
   .sidebar {
     width: 300px;
     display: flex;
@@ -295,18 +423,18 @@ onMounted(() => {
     backdrop-filter: blur(10px);
     border-radius: 1rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-    
+
     .history-header {
       flex-shrink: 0;
       padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      
+
       h2 {
         font-size: 1.25rem;
       }
-      
+
       .new-chat {
         display: flex;
         align-items: center;
@@ -318,23 +446,23 @@ onMounted(() => {
         border: none;
         cursor: pointer;
         transition: background-color 0.3s;
-        
+
         &:hover {
           background: #000;
         }
-        
+
         .icon {
           width: 1.25rem;
           height: 1.25rem;
         }
       }
     }
-    
+
     .history-list {
       flex: 1;
       overflow-y: auto;
       padding: 0 1rem 1rem;
-      
+
       .history-item {
         display: flex;
         align-items: center;
@@ -343,20 +471,20 @@ onMounted(() => {
         border-radius: 0.5rem;
         cursor: pointer;
         transition: background-color 0.3s;
-        
+
         &:hover {
           background: rgba(0, 0, 0, 0.05);
         }
-        
+
         &.active {
           background: rgba(0, 0, 0, 0.1);
         }
-        
+
         .icon {
           width: 1.25rem;
           height: 1.25rem;
         }
-        
+
         .title {
           flex: 1;
           overflow: hidden;
@@ -396,7 +524,7 @@ onMounted(() => {
           background: #f0f0f0;
           border-radius: 12px;
           transition: all 0.3s ease;
-          
+
           &:hover {
             background: #e0e0e0;
             transform: scale(1.05);
@@ -416,13 +544,13 @@ onMounted(() => {
         }
       }
     }
-    
+
     .messages {
       flex: 1;
       overflow-y: auto;
       padding: 2rem;
     }
-    
+
     .input-area {
       flex-shrink: 0;
       padding: 1.5rem 2rem;
@@ -431,7 +559,7 @@ onMounted(() => {
       display: flex;
       gap: 1rem;
       align-items: flex-end;
-      
+
       textarea {
         flex: 1;
         resize: none;
@@ -444,14 +572,14 @@ onMounted(() => {
         font-size: 1rem;
         line-height: 1.5;
         max-height: 150px;
-        
+
         &:focus {
           outline: none;
           border-color: #333;
           box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
         }
       }
-      
+
       .send-button {
         background: #333;
         color: white;
@@ -464,16 +592,16 @@ onMounted(() => {
         justify-content: center;
         cursor: pointer;
         transition: background-color 0.3s;
-        
+
         &:hover:not(:disabled) {
           background: #000;
         }
-        
+
         &:disabled {
           background: #ccc;
           cursor: not-allowed;
         }
-        
+
         .icon {
           width: 1.25rem;
           height: 1.25rem;
@@ -537,11 +665,11 @@ onMounted(() => {
     background: rgba(40, 40, 40, 0.95);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   }
-  
+
   .chat-main {
     background: rgba(40, 40, 40, 0.95);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    
+
     .service-header {
       background: rgba(30, 30, 30, 0.98);
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
@@ -550,7 +678,7 @@ onMounted(() => {
         .avatar {
           color: #fff;
           background: #444;
-          
+
           &:hover {
             background: #555;
           }
@@ -565,12 +693,12 @@ onMounted(() => {
     .input-area {
       background: rgba(30, 30, 30, 0.98);
       border-top: 1px solid rgba(255, 255, 255, 0.05);
-      
+
       textarea {
         background: rgba(50, 50, 50, 0.95);
         border-color: rgba(255, 255, 255, 0.1);
         color: white;
-        
+
         &:focus {
           border-color: #666;
           box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
@@ -605,14 +733,14 @@ onMounted(() => {
     .chat-container {
       padding: 0;
     }
-    
+
     .sidebar {
       display: none;
     }
-    
+
     .chat-main {
       border-radius: 0;
     }
   }
 }
-</style> 
+</style>
