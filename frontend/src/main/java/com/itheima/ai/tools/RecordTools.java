@@ -9,10 +9,14 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 @RequiredArgsConstructor
 @Component
 public class RecordTools {
     private final ISpringAiChatRecordService recordService;
+    public final static ConcurrentMap<String, String> USER_INFO =  new ConcurrentHashMap<>();
     @Tool(description = "更新当前会话的标题")
     public void updateTitle(ToolContext toolContext,
                               @ToolParam(required = false, description = "学生输入的院系") String department,
@@ -21,6 +25,7 @@ public class RecordTools {
         SpringAiChatRecord record = recordService.getById(MapUtil.get(toolContext.getContext(),"chatId", String.class));
         if (record != null){
             record.setTitle(name+"#"+department+"#"+major);
+            USER_INFO.put(record.getId(),record.getTitle());
             recordService.updateById(record);
         }
     }

@@ -3,9 +3,11 @@ package com.itheima.ai.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.itheima.ai.entity.po.SpringAiChatRecord;
 import com.itheima.ai.entity.vo.MessageVO;
+import com.itheima.ai.entity.vo.Result;
 import com.itheima.ai.service.ISpringAiChatRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,9 +39,10 @@ public class ChatHistoryController {
     }
 
     @GetMapping("/delete/{type}/{chatId}")
-    public void deleteChatHistory(@PathVariable("type") String type, @PathVariable("chatId") String chatId) {
+    public Result deleteChatHistory(@PathVariable("type") String type, @PathVariable("chatId") String chatId) {
         recordService.removeById(chatId);
         chatMemoryRepository.deleteByConversationId(chatId);
+        return Result.ok();
     }
 
 }

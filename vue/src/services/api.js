@@ -71,10 +71,7 @@ export const chatAPI = {
       }
       const messages = await response.json()
       // 添加时间戳
-      return messages.map(msg => ({
-        ...msg,
-        timestamp: new Date() // 由于后端没有提供时间戳，这里临时使用当前时间
-      }))
+      return messages
     } catch (error) {
       console.error('API Error:', error)
       return []

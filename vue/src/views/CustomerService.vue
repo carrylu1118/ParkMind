@@ -29,7 +29,7 @@
           <div class="service-info">
             <ComputerDesktopIcon class="avatar" />
             <div class="info">
-              <h3>{{chatTitle}}</h3>
+              <h3>{{currentChat.title}}</h3>
               <p>做最懂你的助手，我们随时待命</p>
             </div>
           </div>
@@ -113,7 +113,8 @@ const showBookingModal = ref(false)
 const bookingInfo = ref('')
 const showConfirmDialog = ref(false);
 const chatToDelete = ref(null);
-const chatTitle = ref('小智');
+// const chatTitle = ref('小智');
+const currentChat = ref({title:'小智'})
 // const currentChatId = ref(1);
 // 配置 marked
 marked.setOptions({
@@ -181,9 +182,18 @@ const sendMessage = async (content) => {
       try {
         const { value, done } = await reader.read()
         if (done) break
+        let responseText = decoder.decode(value)
+        console.log('responseText:', responseText)
 
-        // 累积新内容
-        accumulatedContent += decoder.decode(value)
+        if(responseText.startsWith('HAS_INFO:')){
+          //更新当前聊天的标题
+          // loadChatHistory()
+          currentChat.value.title = responseText.split('HAS_INFO:')[1]
+          chatHistory[0].value = currentChat
+        }else{
+          // 累积新内容
+          accumulatedContent += responseText
+        }
 
         await nextTick(() => {
           // 更新消息
@@ -230,7 +240,8 @@ const sendMessage = async (content) => {
 // 加载特定对话
 const loadChat = async (chat) => {
   currentChatId.value = chat.id
-  chatTitle.value = chat.title
+  currentChat.value = chat
+  // chatTitle.value = chat.title
   try {
     const messages = await chatAPI.getChatMessages(chat.id, 'service')
     currentMessages.value = messages.map(msg => ({
@@ -251,7 +262,7 @@ const loadChatHistory = async () => {
     chatHistory.value = history || []
     console.log('聊天历史2:', chatHistory)
     if (history && history.length > 0) {
-      await loadChat(history[0].id)
+      await loadChat(history[0])
     } else {
       // await startNewChat()  // 等待 startNewChat 完成
     }
@@ -280,7 +291,7 @@ const deleteChat = () => {
         currentChatId.value = null;
         // currentChat.value = null;
         // startNewChat();
-        // loadChat(chatHistory[0].id)
+        // loadChat(chatHistory[0])
       }
       chatAPI.deleteChat(chatToDelete.value.id, 'service')
     }
@@ -296,7 +307,7 @@ const startNewChat = async () => {  // 添加 async
   const newChatId = Date.now().toString()
   currentChatId.value = newChatId
   currentMessages.value = []
-
+  // chatTitle.value = '小智'
   // 添加新对话到历史列表
   const newChat = {
     id: newChatId,
@@ -305,7 +316,7 @@ const startNewChat = async () => {  // 添加 async
   }
   await chatAPI.createNewChat(newChat)
   chatHistory.value = [newChat, ...chatHistory.value]
-
+  currentChat.value = newChat
   // 发送初始问候语
   await sendMessage('你好')
 }
