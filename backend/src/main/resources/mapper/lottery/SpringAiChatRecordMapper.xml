@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.SpringAiChatRecordMapper">
+    
+    <resultMap type="SpringAiChatRecord" id="SpringAiChatRecordResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="userId"    column="user_id"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <resultMap id="SpringAiChatRecordSpringAiChatMemoryResult" type="SpringAiChatRecord" extends="SpringAiChatRecordResult">
+        <collection property="springAiChatMemoryList" notNullColumn="sub_id" javaType="java.util.List" resultMap="SpringAiChatMemoryResult" />
+    </resultMap>
+
+    <resultMap type="SpringAiChatMemory" id="SpringAiChatMemoryResult">
+        <result property="id"    column="sub_id"    />
+        <result property="conversationId"    column="sub_conversation_id"    />
+        <result property="content"    column="sub_content"    />
+        <result property="type"    column="sub_type"    />
+        <result property="timestamp"    column="sub_timestamp"    />
+    </resultMap>
+
+    <sql id="selectSpringAiChatRecordVo">
+        select id, title, user_id, type, create_time from spring_ai_chat_record
+    </sql>
+
+    <select id="selectSpringAiChatRecordList" parameterType="SpringAiChatRecord" resultMap="SpringAiChatRecordResult">
+        <include refid="selectSpringAiChatRecordVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectSpringAiChatRecordById" parameterType="String" resultMap="SpringAiChatRecordSpringAiChatMemoryResult">
+        select a.id, a.title, a.user_id, a.type, a.create_time,
+ b.id as sub_id, b.conversation_id as sub_conversation_id, b.content as sub_content, b.type as sub_type, b.timestamp as sub_timestamp
+        from spring_ai_chat_record a
+        left join SPRING_AI_CHAT_MEMORY b on b.conversation_id = a.id
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertSpringAiChatRecord" parameterType="SpringAiChatRecord">
+        insert into spring_ai_chat_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="userId != null and userId != ''">user_id,</if>
+            <if test="type != null and type != ''">type,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="userId != null and userId != ''">#{userId},</if>
+            <if test="type != null and type != ''">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSpringAiChatRecord" parameterType="SpringAiChatRecord">
+        update spring_ai_chat_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="userId != null and userId != ''">user_id = #{userId},</if>
+            <if test="type != null and type != ''">type = #{type},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSpringAiChatRecordById" parameterType="String">
+        delete from spring_ai_chat_record where id = #{id}
+    </delete>
+
+    <delete id="deleteSpringAiChatRecordByIds" parameterType="String">
+        delete from spring_ai_chat_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteSpringAiChatMemoryByConversationIds" parameterType="String">
+        delete from SPRING_AI_CHAT_MEMORY where conversation_id in 
+        <foreach item="conversationId" collection="array" open="(" separator="," close=")">
+            #{conversationId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteSpringAiChatMemoryByConversationId" parameterType="String">
+        delete from SPRING_AI_CHAT_MEMORY where conversation_id = #{conversationId}
+    </delete>
+
+    <insert id="batchSpringAiChatMemory">
+        insert into SPRING_AI_CHAT_MEMORY( id, conversation_id, content, type, timestamp) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.conversationId}, #{item.content}, #{item.type}, #{item.timestamp})
+        </foreach>
+    </insert>
+
+</mapper>

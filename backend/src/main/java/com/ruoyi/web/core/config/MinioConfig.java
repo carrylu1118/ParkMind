@@ -17,7 +17,7 @@ import java.net.InetAddress;
 @ConfigurationProperties(prefix = "minio")
 public class MinioConfig {
     final static Logger logger = LoggerFactory.getLogger(MinioConfig.class);
-    
+
     private static String host;
     private static String port;
     private static String bucket;
@@ -27,7 +27,7 @@ public class MinioConfig {
 
     @Bean
     @Lazy
-//    @ConditionalOnProperty(name = "ruoyi.uploadType", havingValue = "minio")
+    @ConditionalOnProperty(name = "ruoyi.uploadType", havingValue = "minio")
     public MinioClient minioClient() throws Exception {
         //minio的初始化存在一个小问题，endpoint必须是ip形式，不能是host
         if (!InetAddressValidator.getInstance().isValid(host)){

@@ -34,7 +34,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 /**
  * 通用请求处理
- * 
+ *
  * @author ruoyi
  */
 @Controller
@@ -48,12 +48,12 @@ public class CommonController
 
     private static final String FILE_DELIMETER = ",";
 
-    @Autowired
-    private MinioClient minioClient;
+//    @Autowired
+//    private MinioClient minioClient;
 
     /**
      * 通用下载请求
-     * 
+     *
      * @param fileName 文件名称
      * @param delete 是否删除
      */
@@ -86,30 +86,10 @@ public class CommonController
     private String upload2Minio(MultipartFile file){
         String name = Seq.getId(Seq.uploadSeqType)+"."+ FilenameUtils.getExtension(file.getOriginalFilename());
         try {
-            minioClient.putObject(
-                    MinioConfig.getBucket(), name,file.getInputStream(),file.getSize(),null,null, file.getContentType()
-            );
-        } catch (InvalidBucketNameException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidKeyException e) {
-            throw new RuntimeException(e);
-        } catch (NoResponseException e) {
-            throw new RuntimeException(e);
-        } catch (XmlPullParserException e) {
-            throw new RuntimeException(e);
-        } catch (ErrorResponseException e) {
-            throw new RuntimeException(e);
-        } catch (InternalException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidArgumentException e) {
-            throw new RuntimeException(e);
-        } catch (InsufficientDataException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidResponseException e) {
+//            minioClient.putObject(
+//                    MinioConfig.getBucket(), name,file.getInputStream(),file.getSize(),null,null, file.getContentType()
+//            );
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return name;
