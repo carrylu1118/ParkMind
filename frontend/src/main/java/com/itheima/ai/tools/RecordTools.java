@@ -16,10 +16,11 @@ public class RecordTools {
     @Tool(description = "更新当前会话的标题")
     public void updateTitle(ToolContext toolContext,
                               @ToolParam(required = false, description = "学生输入的院系") String department,
+                              @ToolParam(required = false, description = "学生输入的专业") String major,
                               @ToolParam(required = false, description = "学生输入的姓名") String name) {
         SpringAiChatRecord record = recordService.getById(MapUtil.get(toolContext.getContext(),"chatId", String.class));
         if (record != null){
-            record.setTitle(department+"#"+name);
+            record.setTitle(name+"#"+department+"#"+major);
             recordService.updateById(record);
         }
     }

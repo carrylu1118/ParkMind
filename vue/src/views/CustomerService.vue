@@ -15,7 +15,7 @@
               :key="chat.id"
               class="history-item"
               :class="{ 'active': currentChatId === chat.id }"
-              @click="loadChat(chat.id)"
+              @click="loadChat(chat)"
           >
             <ChatBubbleLeftRightIcon class="icon" />
             <span class="title">{{ chat.title || '新咨询' }}</span>
@@ -29,8 +29,8 @@
           <div class="service-info">
             <ComputerDesktopIcon class="avatar" />
             <div class="info">
-              <h3>小黑</h3>
-              <p>黑马程序员智能客服</p>
+              <h3>{{chatTitle}}</h3>
+              <p>做最懂你的助手，我们随时待命</p>
             </div>
           </div>
         </div>
@@ -113,6 +113,7 @@ const showBookingModal = ref(false)
 const bookingInfo = ref('')
 const showConfirmDialog = ref(false);
 const chatToDelete = ref(null);
+const chatTitle = ref('小智');
 // const currentChatId = ref(1);
 // 配置 marked
 marked.setOptions({
@@ -227,10 +228,11 @@ const sendMessage = async (content) => {
 
 
 // 加载特定对话
-const loadChat = async (chatId) => {
-  currentChatId.value = chatId
+const loadChat = async (chat) => {
+  currentChatId.value = chat.id
+  chatTitle.value = chat.title
   try {
-    const messages = await chatAPI.getChatMessages(chatId, 'service')
+    const messages = await chatAPI.getChatMessages(chat.id, 'service')
     currentMessages.value = messages.map(msg => ({
       ...msg,
       isMarkdown: msg.role === 'assistant'  // 为助手消息添加 Markdown 标记
