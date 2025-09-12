@@ -26,7 +26,8 @@ public class RecordTools {
     ) {
         SpringAiChatRecord record = recordService.getById(MapUtil.get(toolContext.getContext(),"chatId", String.class));
         if (record != null){
-            record.setTitle(name+"#"+studentId);
+            record.setTitle(name);
+            record.setUserId(studentId);
             USER_INFO.put(record.getId(),record.getTitle());
             recordService.updateById(record);
         }

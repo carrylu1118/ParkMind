@@ -114,7 +114,7 @@ const bookingInfo = ref('')
 const showConfirmDialog = ref(false);
 const chatToDelete = ref(null);
 // const chatTitle = ref('小智');
-const currentChat = ref({title:'小智'})
+const currentChat = ref({title:'匿名'})
 // const currentChatId = ref(1);
 // 配置 marked
 marked.setOptions({

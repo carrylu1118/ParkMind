@@ -22,7 +22,6 @@ public class ChatHistoryController {
 
     @RequestMapping("/create")
     public void create(@RequestBody SpringAiChatRecord record) {
-        record.setUserId(1L);
         recordService.save(record);
     }
     @RequestMapping("/list/{type}")

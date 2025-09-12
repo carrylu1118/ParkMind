@@ -37,7 +37,7 @@ public class SpringAiChatRecord implements Serializable {
     /**
      * 用户id
      */
-    private Long userId;
+    private String userId;
 
     /**
      * chat:聊天机器人；service：智能客服；pdf：个人知识库
