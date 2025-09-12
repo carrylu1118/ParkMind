@@ -35,7 +35,7 @@ public class SpringAIConfiguration {
                                         ){
         return ChatClient.builder(model)
                 .defaultAdvisors(
-                        SimpleLoggerAdvisor.builder().build(),
+//                        SimpleLoggerAdvisor.builder().build(),
                         MessageChatMemoryAdvisor.builder(chatMemory).build(),
                         QuestionAnswerAdvisor.builder(vectorStore)
                                 .searchRequest(

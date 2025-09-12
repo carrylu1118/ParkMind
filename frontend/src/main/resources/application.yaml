@@ -20,7 +20,7 @@ spring:
       redis:
         initialize-schema: true
         index: spring-ai-index
-        prefix: "embedding:"
+        prefix: "campusai:"
     chat:
       memory:
         repository:
