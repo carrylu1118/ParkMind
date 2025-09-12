@@ -19,7 +19,7 @@ spring:
       #   dimensions: 1024  #向量维度维度
       redis:
         initialize-schema: true
-        index: spring-ai-index
+        indexName: campusai-ai-index
         prefix: "campusai:"
     chat:
       memory:

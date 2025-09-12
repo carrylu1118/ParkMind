@@ -30,7 +30,7 @@
             <ComputerDesktopIcon class="avatar" />
             <div class="info">
               <h3>{{currentChat.title}}</h3>
-              <p>做最懂你的助手，我们随时待命</p>
+              <p>做最懂你的校园助手</p>
             </div>
           </div>
         </div>

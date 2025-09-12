@@ -41,7 +41,7 @@ public class SpringAIConfiguration {
                                 .searchRequest(
                                         SearchRequest.builder() // 向量检索的请求参数
                                                 .similarityThreshold(0.5d) // 相似度阈值
-                                                .topK(2) // 返回的文档片段数量
+                                                .topK(1) // 返回的文档片段数量
                                                 .build()
                                 ).build()
                 )
