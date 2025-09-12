@@ -32,8 +32,8 @@ public class VectStoreTest {
         """).metadata("id","1").metadata("title","作息与安全").build();
         Document doc2 = Document.builder().text("""
         健康与心灵：
-        校医院地址： 生活区三号楼一层，24小时值班电话：XXXX-XXXX。
-        心理咨询中心： 学生活动中心A座501。当你感到压力、迷茫或焦虑时，这里是安全、专业的避风港。预约电话：XXXX-XXXX（小智提示：求助是强者的行为哦！）
+        校医院地址： 生活区三号楼一层，24小时值班电话：123-456。
+        心理咨询中心： 学生活动中心A座501。当你感到压力、迷茫或焦虑时，这里是安全、专业的避风港。预约电话：789-123
         """).metadata("id","2").metadata("title","健康与心灵").build();
         Document doc3 = Document.builder().text("""
         社团与活动：
@@ -51,6 +51,7 @@ public class VectStoreTest {
 
     @Test
     public void test3ds() {
+        //TODO 删除
         vstore.delete(new Filter.Expression(EQ, new Filter.Key("id"), new Filter.Value("3")));
     }
 
