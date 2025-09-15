@@ -48,8 +48,8 @@ public class CommonController
 
     private static final String FILE_DELIMETER = ",";
 
-//    @Autowired
-//    private MinioClient minioClient;
+    @Autowired
+    private MinioClient minioClient;
 
     /**
      * 通用下载请求
@@ -86,9 +86,9 @@ public class CommonController
     private String upload2Minio(MultipartFile file){
         String name = Seq.getId(Seq.uploadSeqType)+"."+ FilenameUtils.getExtension(file.getOriginalFilename());
         try {
-//            minioClient.putObject(
-//                    MinioConfig.getBucket(), name,file.getInputStream(),file.getSize(),null,null, file.getContentType()
-//            );
+            minioClient.putObject(
+                    MinioConfig.getBucket(), name,file.getInputStream(),file.getSize(),null,null, file.getContentType()
+            );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

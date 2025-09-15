@@ -41,7 +41,7 @@ public class MinioConfig {
                 username,
                 password,false);
 
-//        logger.info("minio connected, buckets="+minioClient.listBuckets());
+        logger.info("minio connected, buckets="+minioClient.listBuckets());
 
         boolean found = minioClient.bucketExists(bucket);
         if (!found) {
