@@ -6,12 +6,12 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.Filter;
+import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
-
-import static org.springframework.ai.vectorstore.filter.Filter.ExpressionType.EQ;
+import java.util.Map;
 
 @SpringBootTest
 public class VectStoreTest {
@@ -24,12 +24,12 @@ public class VectStoreTest {
 
     @Test
     public void test() {
-        Document doc = Document.builder().text("""
+        Document doc = new Document("""
         作息与安全：
         宿舍楼门禁时间为周日至周四 23:00，周五、周六及节假日 24:00。请合理安排时间，准时归寝，确保人身安全。
         严禁在宿舍内使用明火或违章电器，安全无小事，你我共守护。
         离开宿舍时，请务必锁好门窗，保管好个人贵重物品。
-        """).metadata("id","1").metadata("title","作息与安全").build();
+        """,Map.of("id","1","title","作息与安全"));
         Document doc2 = Document.builder().text("""
         健康与心灵：
         校医院地址： 生活区三号楼一层，24小时值班电话：123-456。
@@ -51,8 +51,17 @@ public class VectStoreTest {
 
     @Test
     public void test3ds() {
-        //TODO 删除
-        vstore.delete(new Filter.Expression(EQ, new Filter.Key("id"), new Filter.Value("3")));
+        //TODO metadata删除失败！
+        Filter.Expression filterExpression = new Filter.Expression(
+                Filter.ExpressionType.EQ,
+                new Filter.Key("title"),
+                new Filter.Value("作息与安全")
+        );
+        vstore.delete(filterExpression);
+
+        //ID删除是可以的，注意这里参数不需要带前缀
+        //所以，在生成时，要把id存下来
+        vstore.delete(List.of("266ed706-9365-44d9-88c8-a58823e281e7"));
     }
 
 
