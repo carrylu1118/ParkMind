@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 @MapperScan("com.itheima.ai.mapper")
+//@EnableCanalClient
 public class CampusAiApplication {
 
     public static void main(String[] args) {

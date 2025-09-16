@@ -5,6 +5,12 @@ spring:
       port: 26379
       password: 123456
       client-type: jedis
+  rabbitmq:
+    host: 192.168.150.101
+    port: 5672
+    virtual-host: /
+    username: tjxt
+    password: 123321
 
   application:
     name: spring-ai-demo
@@ -39,7 +45,7 @@ spring:
           dimensions: 1024
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://tjxt:3306/campusai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://192.168.150.101:3306/campusai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: itcast321bca
 logging:
@@ -47,3 +53,10 @@ logging:
     com.itheima: debug
     org.springframework.ai: debug
 
+
+canal:
+  server: 192.168.150.101:11111  # Canal Server地址和端口
+  destination: test     # Canal实例名
+  batch-size: 1000        # 批量获取大小
+  retry-count: 20         # 重试次数
+  acquire-interval: 1000  # 获取消息间隔(毫秒)
