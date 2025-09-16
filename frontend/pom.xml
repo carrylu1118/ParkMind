@@ -90,11 +90,11 @@
             <artifactId>hutool-all</artifactId>
             <version>5.8.40</version>
         </dependency>
-        <dependency>
-            <groupId>cn.anloo</groupId>
-            <artifactId>spring-boot-starter-canal</artifactId>
-            <version>1.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>cn.anloo</groupId>-->
+<!--            <artifactId>spring-boot-starter-canal</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
 
 
         <!--lombok-->

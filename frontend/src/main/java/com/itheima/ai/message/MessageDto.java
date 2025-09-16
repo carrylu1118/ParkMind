@@ -6,7 +6,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class MessageDto {
-    private long id;
+    private String id;
     private int operation;
     private String type;
     private String documentId,title,message;

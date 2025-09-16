@@ -1,7 +1,11 @@
 package com.ruoyi.campusai.controller;
 
 import java.util.List;
+
+import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.core.domain.MessageDto;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 文档Controller
- * 
+ *
  * @author Shawn
  * @date 2025-09-16
  */
@@ -33,6 +37,8 @@ public class DocumentController extends BaseController
 
     @Autowired
     private IDocumentService documentService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @RequiresPermissions("campusai:document:view")
     @GetMapping()
@@ -86,7 +92,11 @@ public class DocumentController extends BaseController
     @ResponseBody
     public AjaxResult addSave(Document document)
     {
-        return toAjax(documentService.insertDocument(document));
+        int result = documentService.insertDocument(document);
+        MessageDto dto = MessageDto.builder().type("document").id(document.getId())
+                .title(document.getTitle()).operation(1).message(document.getUrl()).build();
+        rabbitTemplate.convertAndSend("CAMPUSAI_DOCUMENT", JSON.toJSONString(dto));
+        return toAjax(result);
     }
 
     /**

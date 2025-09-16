@@ -80,20 +80,7 @@ public class SysNoticeController extends BaseController
     public AjaxResult addSave(@Validated SysNotice notice)
     {
         notice.setCreateBy(getLoginName());
-
         int result = noticeService.insertNotice(notice);
-
-        MessageDto dto = MessageDto.builder()
-                .id(notice.getNoticeId())
-                .operation(1)
-                .type("notice")
-                .title(notice.getNoticeTitle())
-                .message(notice.getNoticeContent())
-                .build();
-
-        rabbitTemplate.convertAndSend(RabbitConfig.CAMPUSAI_NOTICE,
-                JSON.toJSONString(dto));
-
         return toAjax(result);
     }
 
