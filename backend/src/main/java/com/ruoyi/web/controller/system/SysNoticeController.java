@@ -1,7 +1,12 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import com.alibaba.fastjson.JSON;
+import com.ruoyi.common.config.RabbitConfig;
+import com.ruoyi.common.core.domain.MessageDto;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,7 +26,7 @@ import com.ruoyi.system.service.ISysNoticeService;
 
 /**
  * 公告 信息操作处理
- * 
+ *
  * @author ruoyi
  */
 @Controller
@@ -29,6 +34,9 @@ import com.ruoyi.system.service.ISysNoticeService;
 public class SysNoticeController extends BaseController
 {
     private String prefix = "system/notice";
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private ISysNoticeService noticeService;
@@ -72,7 +80,21 @@ public class SysNoticeController extends BaseController
     public AjaxResult addSave(@Validated SysNotice notice)
     {
         notice.setCreateBy(getLoginName());
-        return toAjax(noticeService.insertNotice(notice));
+
+        int result = noticeService.insertNotice(notice);
+
+        MessageDto dto = MessageDto.builder()
+                .id(notice.getNoticeId())
+                .operation(1)
+                .type("notice")
+                .title(notice.getNoticeTitle())
+                .message(notice.getNoticeContent())
+                .build();
+
+        rabbitTemplate.convertAndSend(RabbitConfig.CAMPUSAI_NOTICE,
+                JSON.toJSONString(dto));
+
+        return toAjax(result);
     }
 
     /**

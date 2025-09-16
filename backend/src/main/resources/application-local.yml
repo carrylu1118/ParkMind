@@ -2,22 +2,28 @@
 #例如：http://192.168.64.100:9005/prize/1701754725603.jpeg
 #所以要保障其可访问性，尤其是docker部署的时候，应该是宿主机暴露的端口！
 minio:
-    url: http://tjxt:9005
+    url: http://192.168.150.101:9005
     host: 192.168.150.101
     port: 9005
-    bucket: prize
+    bucket: campusai
     username: minioadmin
     password: minioadmin
 
 # 数据源配置
 spring:
+    rabbitmq:
+        host: 192.168.150.101
+        port: 5672
+        virtual-host: /
+        username: tjxt
+        password: 123321
     datasource:
         type: com.alibaba.druid.pool.DruidDataSource
         driverClassName: com.mysql.cj.jdbc.Driver
         druid:
             # 主库数据源
             master:
-                url: jdbc:mysql://tjxt:3306/campusai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
+                url: jdbc:mysql://192.168.150.101:3306/campusai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
                 username: root
                 password: itcast321bca
             # 从库数据源
