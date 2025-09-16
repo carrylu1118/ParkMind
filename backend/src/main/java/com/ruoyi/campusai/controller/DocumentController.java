@@ -120,6 +120,9 @@ public class DocumentController extends BaseController
     @ResponseBody
     public AjaxResult editSave(Document document)
     {
+        MessageDto dto = MessageDto.builder().type("document").id(document.getId())
+                .title(document.getTitle()).operation(2).message(document.getUrl()).build();
+        rabbitTemplate.convertAndSend("CAMPUSAI_DOCUMENT", JSON.toJSONString(dto));
         return toAjax(documentService.updateDocument(document));
     }
 
@@ -132,6 +135,9 @@ public class DocumentController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
+        MessageDto dto = MessageDto.builder().type("document").id(ids)
+                .operation(3).build();
+        rabbitTemplate.convertAndSend("CAMPUSAI_DOCUMENT", JSON.toJSONString(dto));
         return toAjax(documentService.deleteDocumentByIds(ids));
     }
 }

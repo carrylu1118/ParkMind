@@ -1,0 +1,61 @@
+package com.ruoyi.campusai.mapper;
+
+import java.util.List;
+import com.ruoyi.campusai.domain.Notice;
+
+/**
+ * 校园墙Mapper接口
+ * 
+ * @author Shawn
+ * @date 2025-09-16
+ */
+public interface NoticeMapper 
+{
+    /**
+     * 查询校园墙
+     * 
+     * @param id 校园墙主键
+     * @return 校园墙
+     */
+    public Notice selectNoticeById(String id);
+
+    /**
+     * 查询校园墙列表
+     * 
+     * @param notice 校园墙
+     * @return 校园墙集合
+     */
+    public List<Notice> selectNoticeList(Notice notice);
+
+    /**
+     * 新增校园墙
+     * 
+     * @param notice 校园墙
+     * @return 结果
+     */
+    public int insertNotice(Notice notice);
+
+    /**
+     * 修改校园墙
+     * 
+     * @param notice 校园墙
+     * @return 结果
+     */
+    public int updateNotice(Notice notice);
+
+    /**
+     * 删除校园墙
+     * 
+     * @param id 校园墙主键
+     * @return 结果
+     */
+    public int deleteNoticeById(String id);
+
+    /**
+     * 批量删除校园墙
+     * 
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteNoticeByIds(String[] ids);
+}
