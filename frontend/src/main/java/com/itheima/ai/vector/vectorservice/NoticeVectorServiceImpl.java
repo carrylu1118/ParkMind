@@ -47,7 +47,7 @@ public class NoticeVectorServiceImpl implements IVectorService {
                 new DocumentIds()
                         .setSourceId(messageDto.getIds())
                         .setDocumentId(doc.getId())
-                        .setType("CAMPUSAI_MATERIALS")
+                        .setType("CAMPUSAI_NOTICE")
         );
 
     }
@@ -66,8 +66,8 @@ public class NoticeVectorServiceImpl implements IVectorService {
             return;
         }
         //拿到旧的向量id
-        List<String> documentIds = documentIdsService.getDocumentIds(ids);
+        List<String> documentIds = documentIdsService.getDocumentIds("CAMPUSAI_NOTICE",ids);
         store.delete(documentIds);
-        documentIdsService.deleteBySourceIds(ids);
+        documentIdsService.deleteBySourceIds("CAMPUSAI_NOTICE",ids);
     }
 }

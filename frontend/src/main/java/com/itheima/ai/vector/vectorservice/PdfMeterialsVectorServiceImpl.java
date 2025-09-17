@@ -29,7 +29,7 @@ public class PdfMeterialsVectorServiceImpl extends MaterialsVectorServiceImpl{
                             .build()
             );
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         // 2.读取PDF文档，拆分为Document
         List<Document> documents = reader.read();
@@ -41,7 +41,7 @@ public class PdfMeterialsVectorServiceImpl extends MaterialsVectorServiceImpl{
                     new DocumentIds()
                             .setSourceId(String.valueOf(material.getId()))
                             .setDocumentId(document.getId())
-                            .setType("CAMPUSAI_NOTICE")
+                            .setType("CAMPUSAI_MATERIALS")
             );
         });
         // 3.写入向量库

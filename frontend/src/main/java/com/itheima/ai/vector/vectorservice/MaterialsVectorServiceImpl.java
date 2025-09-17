@@ -6,18 +6,11 @@ import com.itheima.ai.service.IDocumentIdsService;
 import com.itheima.ai.service.IMaterialsService;
 import com.itheima.ai.vector.dto.MessageDto;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.document.Document;
-import org.springframework.ai.reader.ExtractedTextFormatter;
-import org.springframework.ai.reader.pdf.PagePdfDocumentReader;
-import org.springframework.ai.reader.pdf.config.PdfDocumentReaderConfig;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 
-import java.net.MalformedURLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -49,9 +42,9 @@ public abstract class MaterialsVectorServiceImpl implements IVectorService {
             return;
         }
         //拿到旧的向量id
-        List<String> documentIds = documentIdsService.getDocumentIds(ids);
+        List<String> documentIds = documentIdsService.getDocumentIds("CAMPUSAI_MATERIALS", ids);
         store.delete(documentIds);
-        documentIdsService.deleteBySourceIds(ids);
+        documentIdsService.deleteBySourceIds("CAMPUSAI_MATERIALS",ids);
     }
 
     protected abstract void writeToVectorStore(Materials materials);

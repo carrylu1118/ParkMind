@@ -22,20 +22,19 @@ import java.util.List;
 public class DocumentIdsServiceImpl extends ServiceImpl<DocumentIdsMapper, DocumentIds> implements IDocumentIdsService {
 
     @Override
-    public List<String> getDocumentIds(String sourceIds) {
+    public List<String> getDocumentIds(String type, String sourceIds) {
         QueryWrapper<DocumentIds> wrapper = new QueryWrapper<>();
+        wrapper.eq("type", type);
         wrapper.in("source_id", sourceIds.split(","));
         List<DocumentIds> documentIds = list(wrapper);
         return documentIds.stream().map(DocumentIds::getDocumentId).toList();
     }
 
     @Override
-    public void deleteBySourceIds(String sourceIds) {
+    public void deleteBySourceIds(String type,String sourceIds) {
         if (StrUtil.isBlank(sourceIds)){
             return ;
         }
-        for (String s : sourceIds.split(",")) {
-            remove(new QueryWrapper<DocumentIds>().eq("source_id", s));
-        }
+        remove(new QueryWrapper<DocumentIds>().eq("type", type).in("source_id",sourceIds.split(",")));
     }
 }
