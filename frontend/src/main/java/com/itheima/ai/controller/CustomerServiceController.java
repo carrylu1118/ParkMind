@@ -1,14 +1,11 @@
 package com.itheima.ai.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.itheima.ai.service.ISpringAiChatRecordService;
-import com.itheima.ai.tools.CourseTools;
 import com.itheima.ai.tools.RecordTools;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;

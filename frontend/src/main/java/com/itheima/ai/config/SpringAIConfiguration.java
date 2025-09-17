@@ -1,7 +1,7 @@
 package com.itheima.ai.config;
 
 import com.itheima.ai.constants.SystemConstants;
-import com.itheima.ai.tools.CourseTools;
+import com.itheima.ai.tools.ClubTools;
 import com.itheima.ai.tools.RecordTools;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -31,7 +31,7 @@ public class SpringAIConfiguration {
     @Bean
     public ChatClient serviceChatClient(OpenAiChatModel model, ChatMemory chatMemory,
                                         VectorStore vectorStore,
-                                        CourseTools courseTools, RecordTools recodTools
+                                        ClubTools clubTools, RecordTools recodTools
                                         ){
         return ChatClient.builder(model)
                 .defaultAdvisors(
@@ -45,7 +45,7 @@ public class SpringAIConfiguration {
                                                 .build()
                                 ).build()
                 )
-                .defaultTools(courseTools,recodTools)
+                .defaultTools(clubTools,recodTools)
                 .defaultSystem(SystemConstants.SERVICE_SYSTEM_PROMPT)
                 .build();
     }
