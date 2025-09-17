@@ -28,25 +28,24 @@ public class PdfMeterialsVectorServiceImpl extends MaterialsVectorServiceImpl{
                             .withPagesPerDocument(1) // 每1页PDF作为一个Document
                             .build()
             );
+            // 2.读取PDF文档，拆分为Document
+            List<Document> documents = reader.read();
+            documents.forEach(document -> {
+                document.getMetadata().put("id", material.getId());
+                document.getMetadata().put("title", material.getTitle());
+                document.getMetadata().put("url", material.getUrl());
+                documentIdsService.save(
+                        new DocumentIds()
+                                .setSourceId(String.valueOf(material.getId()))
+                                .setDocumentId(document.getId())
+                                .setType("CAMPUSAI_MATERIALS")
+                );
+            });
+            // 3.写入向量库
+            store.add(documents);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        // 2.读取PDF文档，拆分为Document
-        List<Document> documents = reader.read();
-        documents.forEach(document -> {
-            document.getMetadata().put("id", material.getId());
-            document.getMetadata().put("title", material.getTitle());
-            document.getMetadata().put("url", material.getUrl());
-            documentIdsService.save(
-                    new DocumentIds()
-                            .setSourceId(String.valueOf(material.getId()))
-                            .setDocumentId(document.getId())
-                            .setType("CAMPUSAI_MATERIALS")
-            );
-        });
-        // 3.写入向量库
-        store.add(documents);
-
 
     }
 }
