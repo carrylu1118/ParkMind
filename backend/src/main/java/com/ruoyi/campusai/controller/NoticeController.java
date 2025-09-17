@@ -2,11 +2,8 @@ package com.ruoyi.campusai.controller;
 
 import java.util.List;
 
-import com.alibaba.fastjson.JSON;
-import com.ruoyi.common.config.RabbitConfig;
-import com.ruoyi.common.core.domain.MessageDto;
+import com.ruoyi.campusai.service.RabbitSendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 校园墙Controller
  *
  * @author Shawn
- * @date 2025-09-16
+ * @date 2025-09-17
  */
 @Controller
 @RequestMapping("/campusai/notice")
@@ -40,7 +37,7 @@ public class NoticeController extends BaseController
     private INoticeService noticeService;
 
     @Autowired
-    private RabbitTemplate rabbitTemplate;
+    private RabbitSendService rabbitSendService;
 
     @RequiresPermissions("campusai:notice:view")
     @GetMapping()
@@ -94,15 +91,9 @@ public class NoticeController extends BaseController
     @ResponseBody
     public AjaxResult addSave(Notice notice)
     {
-        int result = noticeService.insertNotice(notice);
-        MessageDto message = MessageDto.builder().id(notice.getId())
-                .operation(1)
-                .type("notice")
-                .title(notice.getTitle())
-                .message(notice.getContent()).build();
-        rabbitTemplate.convertAndSend(RabbitConfig.CAMPUSAI_NOTICE,
-                JSON.toJSONString(message));
-        return toAjax(result);
+        int rows = noticeService.insertNotice(notice);
+        rabbitSendService.sendAddNotice(notice.getId());
+        return toAjax(rows);
     }
 
     /**
@@ -126,16 +117,8 @@ public class NoticeController extends BaseController
     @ResponseBody
     public AjaxResult editSave(Notice notice)
     {
-        int result = noticeService.updateNotice(notice);
-        MessageDto message = MessageDto.builder().id(notice.getId())
-                .operation(2)
-                .type("notice")
-                .title(notice.getTitle())
-                .message(notice.getContent()).build();
-        rabbitTemplate.convertAndSend(RabbitConfig.CAMPUSAI_NOTICE,
-                JSON.toJSONString(message));
-
-        return toAjax(result);
+        rabbitSendService.sendUpdateNotice(notice.getId());
+        return toAjax(noticeService.updateNotice(notice));
     }
 
     /**
@@ -147,11 +130,7 @@ public class NoticeController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
-        MessageDto message = MessageDto.builder().id(ids)
-                .operation(3)
-                .type("notice").build();
-        rabbitTemplate.convertAndSend(RabbitConfig.CAMPUSAI_NOTICE,
-                JSON.toJSONString(message));
+        rabbitSendService.sendDeleteNotice(ids);
         return toAjax(noticeService.deleteNoticeByIds(ids));
     }
 }

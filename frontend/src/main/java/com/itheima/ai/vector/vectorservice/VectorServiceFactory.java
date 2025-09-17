@@ -16,9 +16,9 @@ public class VectorServiceFactory {
 
     public IVectorService of(String mesageType) {
         switch(mesageType) {
-            case "document":
+            case "CAMPUSAI_MATERIALS":
                 return materialsVectorService;
-            case "notice":
+            case "CAMPUSAI_NOTICE":
                 return noticeVectorService;
             default:
                 return null;

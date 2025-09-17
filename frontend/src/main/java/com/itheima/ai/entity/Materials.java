@@ -10,7 +10,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 文档表
+ * 资料库
  * </p>
  *
  * @author 潜心
@@ -39,11 +39,6 @@ public class Materials implements Serializable {
      * 文档链接
      */
     private String url;
-
-    /**
-     * 向量库文档id
-     */
-    private String documentId;
 
 
 }

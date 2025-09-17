@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 文档表 服务实现类
+ * 资料库 服务实现类
  * </p>
  *
  * @author 潜心

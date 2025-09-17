@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@RabbitListener(queues = {"CAMPUSAI_NOTICE","CAMPUSAI_DOCUMENT"})
+@RabbitListener(queues = {"CAMPUSAI_NOTICE","CAMPUSAI_MATERIALS"})
 public class CampusaiMessageReceiver {
     private final static Logger logger = LoggerFactory.getLogger(CampusaiMessageReceiver.class);
 

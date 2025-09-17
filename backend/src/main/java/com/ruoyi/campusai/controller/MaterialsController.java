@@ -1,6 +1,8 @@
 package com.ruoyi.campusai.controller;
 
 import java.util.List;
+
+import com.ruoyi.campusai.service.RabbitSendService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,8 +22,8 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 文档库Controller
- * 
+ * 资料库Controller
+ *
  * @author Shawn
  * @date 2025-09-17
  */
@@ -34,6 +36,9 @@ public class MaterialsController extends BaseController
     @Autowired
     private IMaterialsService materialsService;
 
+    @Autowired
+    RabbitSendService rabbitSendService;
+
     @RequiresPermissions("campusai:materials:view")
     @GetMapping()
     public String materials()
@@ -42,7 +47,7 @@ public class MaterialsController extends BaseController
     }
 
     /**
-     * 查询文档库列表
+     * 查询资料库列表
      */
     @RequiresPermissions("campusai:materials:list")
     @PostMapping("/list")
@@ -55,21 +60,21 @@ public class MaterialsController extends BaseController
     }
 
     /**
-     * 导出文档库列表
+     * 导出资料库列表
      */
     @RequiresPermissions("campusai:materials:export")
-    @Log(title = "文档库", businessType = BusinessType.EXPORT)
+    @Log(title = "资料库", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     @ResponseBody
     public AjaxResult export(Materials materials)
     {
         List<Materials> list = materialsService.selectMaterialsList(materials);
         ExcelUtil<Materials> util = new ExcelUtil<Materials>(Materials.class);
-        return util.exportExcel(list, "文档库数据");
+        return util.exportExcel(list, "资料库数据");
     }
 
     /**
-     * 新增文档库
+     * 新增资料库
      */
     @GetMapping("/add")
     public String add()
@@ -78,19 +83,21 @@ public class MaterialsController extends BaseController
     }
 
     /**
-     * 新增保存文档库
+     * 新增保存资料库
      */
     @RequiresPermissions("campusai:materials:add")
-    @Log(title = "文档库", businessType = BusinessType.INSERT)
+    @Log(title = "资料库", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Materials materials)
     {
-        return toAjax(materialsService.insertMaterials(materials));
+        int rows = materialsService.insertMaterials(materials);
+        rabbitSendService.sendAddMaterials(materials.getId());
+        return toAjax(rows);
     }
 
     /**
-     * 修改文档库
+     * 修改资料库
      */
     @RequiresPermissions("campusai:materials:edit")
     @GetMapping("/edit/{id}")
@@ -102,26 +109,28 @@ public class MaterialsController extends BaseController
     }
 
     /**
-     * 修改保存文档库
+     * 修改保存资料库
      */
     @RequiresPermissions("campusai:materials:edit")
-    @Log(title = "文档库", businessType = BusinessType.UPDATE)
+    @Log(title = "资料库", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Materials materials)
     {
+        rabbitSendService.sendUpdateMaterials(materials.getId());
         return toAjax(materialsService.updateMaterials(materials));
     }
 
     /**
-     * 删除文档库
+     * 删除资料库
      */
     @RequiresPermissions("campusai:materials:remove")
-    @Log(title = "文档库", businessType = BusinessType.DELETE)
+    @Log(title = "资料库", businessType = BusinessType.DELETE)
     @PostMapping( "/remove")
     @ResponseBody
     public AjaxResult remove(String ids)
     {
+        rabbitSendService.sendDeleteMaterials(ids);
         return toAjax(materialsService.deleteMaterialsByIds(ids));
     }
 }

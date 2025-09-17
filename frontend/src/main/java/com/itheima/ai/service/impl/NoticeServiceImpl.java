@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 
 /**
  * <p>
- * 文档表 服务实现类
+ * 校园墙 服务实现类
  * </p>
  *
  * @author 潜心
- * @since 2025-09-16
+ * @since 2025-09-17
  */
 @Service
 public class NoticeServiceImpl extends ServiceImpl<NoticeMapper, Notice> implements INoticeService {

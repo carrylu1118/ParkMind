@@ -1,5 +1,6 @@
 package com.ruoyi.campusai.domain;
 
+import java.util.List;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -9,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 校园墙对象 notice
  * 
  * @author Shawn
- * @date 2025-09-16
+ * @date 2025-09-17
  */
 public class Notice extends BaseEntity
 {

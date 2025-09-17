@@ -3,7 +3,6 @@ package com.itheima.ai.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
 import java.io.Serializable;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -11,7 +10,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 校园墙
+ * 文档表
  * </p>
  *
  * @author 潜心
@@ -20,8 +19,8 @@ import lombok.experimental.Accessors;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("notice")
-public class Notice implements Serializable {
+@TableName("document_ids")
+public class DocumentIds implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,19 +31,19 @@ public class Notice implements Serializable {
     private Integer id;
 
     /**
-     * 标题
+     * 类型：CAMPUSAI_NOTICE,CAMPUSAI_MATERIALS
      */
-    private String title;
+    private String type;
 
     /**
-     * 内容
+     * 表数据id
      */
-    private String content;
+    private String sourceId;
 
     /**
-     * 创建时间
+     * 向量库文档id
      */
-    private LocalDateTime createTime;
+    private String documentId;
 
 
 }

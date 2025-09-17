@@ -8,11 +8,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="title"    column="title"    />
         <result property="url"    column="url"    />
-        <result property="documentId"    column="document_id"    />
     </resultMap>
 
     <sql id="selectMaterialsVo">
-        select id, title, url, document_id from materials
+        select id, title, url from materials
     </sql>
 
     <select id="selectMaterialsList" parameterType="Materials" resultMap="MaterialsResult">
@@ -20,7 +19,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
             <if test="url != null  and url != ''"> and url like concat('%', #{url}, '%')</if>
-            <if test="documentId != null  and documentId != ''"> and document_id like concat('%', #{documentId}, '%')</if>
         </where>
     </select>
     
@@ -34,12 +32,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">title,</if>
             <if test="url != null and url != ''">url,</if>
-            <if test="documentId != null">document_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">#{title},</if>
             <if test="url != null and url != ''">#{url},</if>
-            <if test="documentId != null">#{documentId},</if>
          </trim>
     </insert>
 
@@ -48,7 +44,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="url != null and url != ''">url = #{url},</if>
-            <if test="documentId != null">document_id = #{documentId},</if>
         </trim>
         where id = #{id}
     </update>

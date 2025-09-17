@@ -1,5 +1,6 @@
 package com.itheima.ai.vector.vectorservice;
 
+import com.itheima.ai.entity.DocumentIds;
 import com.itheima.ai.entity.Materials;
 import com.itheima.ai.vector.dto.MessageDto;
 import org.springframework.ai.document.Document;
@@ -16,12 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class PdfMeterialsVectorServiceImpl extends MaterialsVectorServiceImpl{
     @Override
-    public void writeToVectorStore(MessageDto dto) {
+    public void writeToVectorStore(Materials material) {
         // 1.创建PDF的读取器
         PagePdfDocumentReader reader = null;
         try {
             reader = new PagePdfDocumentReader(
-                    new UrlResource(dto.getMessage()), // 文件源
+                    new UrlResource(material.getUrl()), // 文件源
                     PdfDocumentReaderConfig.builder()
                             .withPageExtractedTextFormatter(ExtractedTextFormatter.defaults())
                             .withPagesPerDocument(1) // 每1页PDF作为一个Document
@@ -33,16 +34,19 @@ public class PdfMeterialsVectorServiceImpl extends MaterialsVectorServiceImpl{
         // 2.读取PDF文档，拆分为Document
         List<Document> documents = reader.read();
         documents.forEach(document -> {
-            document.getMetadata().put("id", dto.getId());
-            document.getMetadata().put("title", dto.getTitle());
+            document.getMetadata().put("id", material.getId());
+            document.getMetadata().put("title", material.getTitle());
+            document.getMetadata().put("url", material.getUrl());
+            documentIdsService.save(
+                    new DocumentIds()
+                            .setSourceId(String.valueOf(material.getId()))
+                            .setDocumentId(document.getId())
+                            .setType("CAMPUSAI_NOTICE")
+            );
         });
         // 3.写入向量库
         store.add(documents);
 
-        // 4.保存Document的ID
-        String ids = documents.stream().map(Document::getId).collect(Collectors.joining(","));
-        Materials document = materialsService.getById(dto.getId());
-        document.setDocumentId(ids);
-        materialsService.updateById(document);
+
     }
 }

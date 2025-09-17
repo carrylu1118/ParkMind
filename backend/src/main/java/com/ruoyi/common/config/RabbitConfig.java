@@ -20,8 +20,7 @@ public class RabbitConfig {
     private CachingConnectionFactory connectionFactory;
 
     public static final String CAMPUSAI_NOTICE = "CAMPUSAI_NOTICE";
-    public static final String CAMPUSAI_DOCUMENT = "CAMPUSAI_DOCUMENT";
-    public static final String CAMPUSAI_EXCHANGE = "CAMPUSAI_EXCHANGE";
+    public static final String CAMPUSAI_MATERIALS = "CAMPUSAI_MATERIALS";
 
 
     /**
@@ -42,7 +41,7 @@ public class RabbitConfig {
 
     @Bean
     public Queue getDocumentQueue() {
-        return new Queue(CAMPUSAI_DOCUMENT);
+        return new Queue(CAMPUSAI_MATERIALS);
     }
 //    @Bean
 //    Binding bindingDocumentDirect() {

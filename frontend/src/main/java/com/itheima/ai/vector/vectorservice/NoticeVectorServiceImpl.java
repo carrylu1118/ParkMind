@@ -1,7 +1,11 @@
 package com.itheima.ai.vector.vectorservice;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import com.itheima.ai.entity.DocumentIds;
 import com.itheima.ai.entity.Notice;
+import com.itheima.ai.service.IDocumentIdsService;
 import com.itheima.ai.service.INoticeService;
 import com.itheima.ai.vector.dto.MessageDto;
 import lombok.RequiredArgsConstructor;
@@ -24,41 +28,46 @@ public class NoticeVectorServiceImpl implements IVectorService {
     private VectorStore store;
     @Autowired
     private INoticeService noticeService;
+    @Autowired
+    private IDocumentIdsService documentIdsService;
     @Override
     public void addDocument(MessageDto messageDto) {
-        String id = messageDto.getId();
-        if (!NumberUtil.isNumber(id)){
-            log.warn("id is null");
+        String ids = messageDto.getIds();
+        if (StrUtil.isEmpty(ids)){
+            log.warn("ids is null");
             return;
         }
-        Document doc = new Document(messageDto.getMessage(),
-                Map.of("id",id,"title",messageDto.getTitle()));
+        Notice notice = noticeService.getById(ids);
+        Document doc = new Document(notice.getContent(),
+                Map.of("id",notice.getId(),"title",notice.getTitle()));
+        //保存到向量库
         store.add(List.of(doc));
-        //填入向量库的 document id，后续删除要用
-        Notice notice = new Notice();
-        notice.setId(Integer.parseInt(id));
-        notice.setDocumentId(doc.getId());
-        noticeService.updateById(notice);
+        //记录向量库的 document id，后续删除要用
+        documentIdsService.save(
+                new DocumentIds()
+                        .setSourceId(messageDto.getIds())
+                        .setDocumentId(doc.getId())
+                        .setType("CAMPUSAI_MATERIALS")
+        );
+
     }
 
     @Override
     public void updateDocument(MessageDto messageDto) {
-        String id = messageDto.getId();
-        if (!NumberUtil.isNumber(id)){
-            log.warn("id is null");
-            return;
-        }
-        Notice notice = noticeService.getById(id);
-        store.delete(List.of(notice.getDocumentId()));
+        deleteDocument(messageDto);
         addDocument(messageDto);
     }
 
     @Override
     public void deleteDocument(MessageDto messageDto) {
-        String ids = messageDto.getId();
-        Arrays.stream(ids.split(",")).forEach(id -> {
-            Notice notice4del = noticeService.getById(id);
-            store.delete(List.of(notice4del.getDocumentId()));
-        });
+        String ids = messageDto.getIds();
+        if (StrUtil.isEmpty(ids)){
+            log.warn("ids is null");
+            return;
+        }
+        //拿到旧的向量id
+        List<String> documentIds = documentIdsService.getDocumentIds(ids);
+        store.delete(documentIds);
+        documentIdsService.deleteBySourceIds(ids);
     }
 }

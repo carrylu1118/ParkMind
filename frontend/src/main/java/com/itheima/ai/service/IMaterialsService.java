@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
  * <p>
- * 文档表 服务类
+ * 资料库 服务类
  * </p>
  *
  * @author 潜心

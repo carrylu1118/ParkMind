@@ -7,7 +7,7 @@ import com.ruoyi.campusai.domain.Notice;
  * 校园墙Service接口
  * 
  * @author Shawn
- * @date 2025-09-16
+ * @date 2025-09-17
  */
 public interface INoticeService 
 {

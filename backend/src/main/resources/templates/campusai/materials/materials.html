@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <head>
-    <th:block th:include="include :: header('文档库列表')" />
+    <th:block th:include="include :: header('资料库列表')" />
 </head>
 <body class="gray-bg">
      <div class="container-div">
@@ -15,8 +15,8 @@
                                 <input type="text" name="title"/>
                             </li>
                             <li>
-                                <label>向量库文档id：</label>
-                                <input type="text" name="documentId"/>
+                                <label>文档链接：</label>
+                                <input type="text" name="url"/>
                             </li>
                             <li>
                                 <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
@@ -59,7 +59,7 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
                 exportUrl: prefix + "/export",
-                modalName: "文档库",
+                modalName: "资料库",
                 columns: [{
                     checkbox: true
                 },
@@ -75,10 +75,6 @@
                 {
                     field: 'url',
                     title: '文档链接'
-                },
-                {
-                    field: 'documentId',
-                    title: '向量库文档id'
                 },
                 {
                     title: '操作',
