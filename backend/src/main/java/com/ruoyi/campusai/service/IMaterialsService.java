@@ -5,15 +5,15 @@ import com.ruoyi.campusai.domain.Materials;
 
 /**
  * 资料库Service接口
- * 
+ *
  * @author Shawn
  * @date 2025-09-17
  */
-public interface IMaterialsService 
+public interface IMaterialsService
 {
     /**
      * 查询资料库
-     * 
+     *
      * @param id 资料库主键
      * @return 资料库
      */
@@ -21,7 +21,7 @@ public interface IMaterialsService
 
     /**
      * 查询资料库列表
-     * 
+     *
      * @param materials 资料库
      * @return 资料库集合
      */
@@ -29,7 +29,7 @@ public interface IMaterialsService
 
     /**
      * 新增资料库
-     * 
+     *
      * @param materials 资料库
      * @return 结果
      */
@@ -37,7 +37,7 @@ public interface IMaterialsService
 
     /**
      * 修改资料库
-     * 
+     *
      * @param materials 资料库
      * @return 结果
      */
@@ -45,7 +45,7 @@ public interface IMaterialsService
 
     /**
      * 批量删除资料库
-     * 
+     *
      * @param ids 需要删除的资料库主键集合
      * @return 结果
      */
@@ -53,7 +53,7 @@ public interface IMaterialsService
 
     /**
      * 删除资料库信息
-     * 
+     *
      * @param id 资料库主键
      * @return 结果
      */
