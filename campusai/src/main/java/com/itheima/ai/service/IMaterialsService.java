@@ -1,6 +1,6 @@
 package com.itheima.ai.service;
 
-import com.itheima.ai.entity.Document;
+import com.itheima.ai.entity.Materials;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author 潜心
- * @since 2025-09-16
+ * @since 2025-09-17
  */
-public interface IDocumentService extends IService<Document> {
+public interface IMaterialsService extends IService<Materials> {
 
 }

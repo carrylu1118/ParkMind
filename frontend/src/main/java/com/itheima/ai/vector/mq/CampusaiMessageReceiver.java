@@ -4,7 +4,6 @@ import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.itheima.ai.entity.Notice;
 import com.itheima.ai.vector.dto.MessageDto;
-import com.itheima.ai.service.IDocumentService;
 import com.itheima.ai.service.INoticeService;
 import com.itheima.ai.vector.vectorservice.IVectorService;
 import com.itheima.ai.vector.vectorservice.VectorServiceFactory;

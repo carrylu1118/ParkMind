@@ -2,58 +2,63 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.campusai.mapper.DocumentMapper">
+<mapper namespace="com.ruoyi.campusai.mapper.MaterialsMapper">
     
-    <resultMap type="Document" id="DocumentResult">
+    <resultMap type="Materials" id="MaterialsResult">
         <result property="id"    column="id"    />
         <result property="title"    column="title"    />
         <result property="url"    column="url"    />
+        <result property="documentId"    column="document_id"    />
     </resultMap>
 
-    <sql id="selectDocumentVo">
-        select id, title, url from document
+    <sql id="selectMaterialsVo">
+        select id, title, url, document_id from materials
     </sql>
 
-    <select id="selectDocumentList" parameterType="Document" resultMap="DocumentResult">
-        <include refid="selectDocumentVo"/>
+    <select id="selectMaterialsList" parameterType="Materials" resultMap="MaterialsResult">
+        <include refid="selectMaterialsVo"/>
         <where>  
             <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
             <if test="url != null  and url != ''"> and url like concat('%', #{url}, '%')</if>
+            <if test="documentId != null  and documentId != ''"> and document_id like concat('%', #{documentId}, '%')</if>
         </where>
     </select>
     
-    <select id="selectDocumentById" parameterType="String" resultMap="DocumentResult">
-        <include refid="selectDocumentVo"/>
+    <select id="selectMaterialsById" parameterType="String" resultMap="MaterialsResult">
+        <include refid="selectMaterialsVo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertDocument" parameterType="Document" useGeneratedKeys="true" keyProperty="id">
-        insert into document
+    <insert id="insertMaterials" parameterType="Materials" useGeneratedKeys="true" keyProperty="id">
+        insert into materials
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">title,</if>
             <if test="url != null and url != ''">url,</if>
+            <if test="documentId != null">document_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">#{title},</if>
             <if test="url != null and url != ''">#{url},</if>
+            <if test="documentId != null">#{documentId},</if>
          </trim>
     </insert>
 
-    <update id="updateDocument" parameterType="Document">
-        update document
+    <update id="updateMaterials" parameterType="Materials">
+        update materials
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null and title != ''">title = #{title},</if>
             <if test="url != null and url != ''">url = #{url},</if>
+            <if test="documentId != null">document_id = #{documentId},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteDocumentById" parameterType="String">
-        delete from document where id = #{id}
+    <delete id="deleteMaterialsById" parameterType="String">
+        delete from materials where id = #{id}
     </delete>
 
-    <delete id="deleteDocumentByIds" parameterType="String">
-        delete from document where id in 
+    <delete id="deleteMaterialsByIds" parameterType="String">
+        delete from materials where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

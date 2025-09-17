@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" >
 <head>
-    <th:block th:include="include :: header('新增文档')" />
+    <th:block th:include="include :: header('新增文档库')" />
     <th:block th:include="include :: bootstrap-fileinput-css"/>
 </head>
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-document-add">
+        <form class="form-horizontal m" id="form-materials-add">
             <div class="form-group">    
                 <label class="col-sm-3 control-label is-required">名称：</label>
                 <div class="col-sm-8">
@@ -27,14 +27,14 @@
     <th:block th:include="include :: footer" />
     <th:block th:include="include :: bootstrap-fileinput-js"/>
     <script th:inline="javascript">
-        var prefix = ctx + "campusai/document"
-        $("#form-document-add").validate({
+        var prefix = ctx + "campusai/materials"
+        $("#form-materials-add").validate({
             focusCleanup: true
         });
 
         function submitHandler() {
             if ($.validate.form()) {
-                $.operate.save(prefix + "/add", $('#form-document-add').serialize());
+                $.operate.save(prefix + "/add", $('#form-materials-add').serialize());
             }
         }
 

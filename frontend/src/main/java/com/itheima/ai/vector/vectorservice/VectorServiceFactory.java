@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class VectorServiceFactory {
 
     @Autowired
-    private DocumentVectorServiceImpl documentVectorService;
+    private MaterialsVectorServiceImpl materialsVectorService;
 
     @Autowired
     private NoticeVectorServiceImpl noticeVectorService;
@@ -17,7 +17,7 @@ public class VectorServiceFactory {
     public IVectorService of(String mesageType) {
         switch(mesageType) {
             case "document":
-                return documentVectorService;
+                return materialsVectorService;
             case "notice":
                 return noticeVectorService;
             default:

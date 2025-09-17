@@ -1,6 +1,6 @@
 package com.itheima.ai.mapper;
 
-import com.itheima.ai.entity.Document;
+import com.itheima.ai.entity.Materials;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * </p>
  *
  * @author 潜心
- * @since 2025-09-16
+ * @since 2025-09-17
  */
-public interface DocumentMapper extends BaseMapper<Document> {
+public interface MaterialsMapper extends BaseMapper<Materials> {
 
 }

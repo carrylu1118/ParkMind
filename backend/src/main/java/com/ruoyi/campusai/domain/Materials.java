@@ -6,12 +6,12 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 文档对象 document
+ * 文档库对象 materials
  * 
  * @author Shawn
- * @date 2025-09-16
+ * @date 2025-09-17
  */
-public class Document extends BaseEntity
+public class Materials extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
@@ -25,6 +25,10 @@ public class Document extends BaseEntity
     /** 文档链接 */
     @Excel(name = "文档链接")
     private String url;
+
+    /** 向量库文档id */
+    @Excel(name = "向量库文档id")
+    private String documentId;
 
     public void setId(String id) 
     {
@@ -53,6 +57,15 @@ public class Document extends BaseEntity
     {
         return url;
     }
+    public void setDocumentId(String documentId) 
+    {
+        this.documentId = documentId;
+    }
+
+    public String getDocumentId() 
+    {
+        return documentId;
+    }
 
     @Override
     public String toString() {
@@ -60,6 +73,7 @@ public class Document extends BaseEntity
             .append("id", getId())
             .append("title", getTitle())
             .append("url", getUrl())
+            .append("documentId", getDocumentId())
             .toString();
     }
 }
