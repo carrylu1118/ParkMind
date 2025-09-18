@@ -7,28 +7,17 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-DROP TABLE IF EXISTS `course`;
-CREATE TABLE `course` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '学科名称',
-  `edu` int NOT NULL DEFAULT '0' COMMENT '学历背景要求：0-无，1-初中，2-高中、3-大专、4-本科以上',
-  `type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '0' COMMENT '课程类型：编程、设计、自媒体、其它',
-  `price` bigint NOT NULL DEFAULT '0' COMMENT '课程价格',
-  `duration` int unsigned NOT NULL DEFAULT '0' COMMENT '学习时长，单位: 天',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='学科表';
-
-DROP TABLE IF EXISTS `course_reservation`;
-CREATE TABLE `course_reservation` (
+DROP TABLE IF EXISTS `club_reservation`;
+CREATE TABLE `club_reservation` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `course` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '预约课程',
-  `student_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '学生姓名',
-  `contact_info` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系方式',
-  `school` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '预约校区',
+  `club` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '预约社团',
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '学生姓名',
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '联系方式',
+  `major` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '专业',
   `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci COMMENT '备注',
-  `userId` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '学号',
+  `user_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '学号',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='社团报名';
 
 DROP TABLE IF EXISTS `document_ids`;
 CREATE TABLE `document_ids` (
@@ -37,7 +26,7 @@ CREATE TABLE `document_ids` (
   `source_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '表数据id',
   `document_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '向量库文档id',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=138 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='文档表';
+) ENGINE=InnoDB AUTO_INCREMENT=140 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='文档表';
 
 DROP TABLE IF EXISTS `gen_table`;
 CREATE TABLE `gen_table` (
@@ -62,7 +51,7 @@ CREATE TABLE `gen_table` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
   PRIMARY KEY (`table_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='代码生成业务表';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='代码生成业务表';
 
 DROP TABLE IF EXISTS `gen_table_column`;
 CREATE TABLE `gen_table_column` (
@@ -89,7 +78,7 @@ CREATE TABLE `gen_table_column` (
   `update_by` varchar(64) DEFAULT '' COMMENT '更新者',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   PRIMARY KEY (`column_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='代码生成业务表字段';
+) ENGINE=InnoDB AUTO_INCREMENT=134 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='代码生成业务表字段';
 
 DROP TABLE IF EXISTS `materials`;
 CREATE TABLE `materials` (
@@ -103,18 +92,10 @@ DROP TABLE IF EXISTS `notice`;
 CREATE TABLE `notice` (
   `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
   `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '标题',
-  `content` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '内容',
+  `content` varchar(3000) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '内容',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='校园墙';
-
-DROP TABLE IF EXISTS `school`;
-CREATE TABLE `school` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '校区名称',
-  `city` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '校区所在城市',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='校区表';
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='校园墙';
 
 DROP TABLE IF EXISTS `SPRING_AI_CHAT_MEMORY`;
 CREATE TABLE `SPRING_AI_CHAT_MEMORY` (
@@ -126,7 +107,7 @@ CREATE TABLE `SPRING_AI_CHAT_MEMORY` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `SPRING_AI_CHAT_MEMORY_CONVERSATION_ID_TIMESTAMP_IDX` (`conversation_id`,`timestamp`) USING BTREE,
   CONSTRAINT `TYPE_CHECK` CHECK ((`type` in (_utf8mb4'USER',_utf8mb4'ASSISTANT',_utf8mb4'SYSTEM',_utf8mb4'TOOL')))
-) ENGINE=InnoDB AUTO_INCREMENT=3251 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3839 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 DROP TABLE IF EXISTS `spring_ai_chat_record`;
 CREATE TABLE `spring_ai_chat_record` (
@@ -253,7 +234,7 @@ CREATE TABLE `sys_logininfor` (
   PRIMARY KEY (`info_id`),
   KEY `idx_sys_logininfor_s` (`status`),
   KEY `idx_sys_logininfor_lt` (`login_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统访问记录';
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='系统访问记录';
 
 DROP TABLE IF EXISTS `sys_menu`;
 CREATE TABLE `sys_menu` (
@@ -274,7 +255,7 @@ CREATE TABLE `sys_menu` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2081 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=2087 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='菜单权限表';
 
 DROP TABLE IF EXISTS `sys_notice`;
 CREATE TABLE `sys_notice` (
@@ -315,7 +296,7 @@ CREATE TABLE `sys_oper_log` (
   KEY `idx_sys_oper_log_bt` (`business_type`),
   KEY `idx_sys_oper_log_s` (`status`),
   KEY `idx_sys_oper_log_ot` (`oper_time`)
-) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=103 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志记录';
 
 DROP TABLE IF EXISTS `sys_post`;
 CREATE TABLE `sys_post` (
@@ -419,38 +400,17 @@ CREATE TABLE `sys_user_role` (
   PRIMARY KEY (`user_id`,`role_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='用户和角色关联表';
 
-INSERT INTO `course` (`id`, `name`, `edu`, `type`, `price`, `duration`) VALUES
-(1, 'JavaEE', 4, '编程', 21999, 108);
-INSERT INTO `course` (`id`, `name`, `edu`, `type`, `price`, `duration`) VALUES
-(2, '鸿蒙应用开发', 3, '编程', 20999, 98);
-INSERT INTO `course` (`id`, `name`, `edu`, `type`, `price`, `duration`) VALUES
-(3, 'AI人工智能', 4, '编程', 24999, 100);
-INSERT INTO `course` (`id`, `name`, `edu`, `type`, `price`, `duration`) VALUES
-(4, 'Python大数据开发', 4, '编程', 23999, 102),
-(5, '跨境电商', 0, '自媒体', 12999, 68),
-(6, '新媒体运营', 0, '自媒体', 10999, 61),
-(7, 'UI设计', 2, '设计', 11999, 66);
+INSERT INTO `club_reservation` (`id`, `club`, `name`, `phone`, `major`, `remark`, `user_id`) VALUES
+(8, '炫锋篮球社团', '王小猫', '13333332222', '计算机系 人工智能', '身体很壮实，可以打中锋', '321');
 
-INSERT INTO `course_reservation` (`id`, `course`, `student_name`, `contact_info`, `school`, `remark`, `userId`) VALUES
-(1, '新媒体运营', '张三丰', '13899762348', '广东校区', '安排一个好点的老师', NULL);
-INSERT INTO `course_reservation` (`id`, `course`, `student_name`, `contact_info`, `school`, `remark`, `userId`) VALUES
-(2, '鸿蒙应用开发', '李威松', '1358199****', '昌平校区', '希望尽快安排试听', NULL);
-INSERT INTO `course_reservation` (`id`, `course`, `student_name`, `contact_info`, `school`, `remark`, `userId`) VALUES
-(3, 'AI人工智能', '潜心', '13322223333', '昌平校区', '', NULL);
-INSERT INTO `course_reservation` (`id`, `course`, `student_name`, `contact_info`, `school`, `remark`, `userId`) VALUES
-(4, 'JavaEE', '李同学', '13812345678', '昌平校区', '希望尽快安排试听', NULL),
-(5, 'AI人工智能', '王同学', '13322223333', '昌平校区', '想听AI相关的课程', NULL),
-(6, 'AI人工智能', '王小猫', '13322223333', '昌平校区', '想听潜心老师的课', NULL),
-(7, 'AI人工智能', '王小猫', '13322223333', '昌平校区', '用户着急听课', NULL);
 
-INSERT INTO `document_ids` (`id`, `type`, `source_id`, `document_id`) VALUES
-(28, 'CAMPUSAI_NOTICE', '29', '42357005-89df-4469-9db9-36fa22356208');
 INSERT INTO `document_ids` (`id`, `type`, `source_id`, `document_id`) VALUES
 (29, 'CAMPUSAI_NOTICE', '30', '00d8902e-3cb5-4886-996b-6d81b60088d0');
 INSERT INTO `document_ids` (`id`, `type`, `source_id`, `document_id`) VALUES
 (42, 'CAMPUSAI_MATERIALS', '26', '56d39b52-785c-4346-be55-bbe572652a81');
 INSERT INTO `document_ids` (`id`, `type`, `source_id`, `document_id`) VALUES
-(43, 'CAMPUSAI_MATERIALS', '26', '8a8e20e7-d89c-4785-a18d-10bfdc393dff'),
+(43, 'CAMPUSAI_MATERIALS', '26', '8a8e20e7-d89c-4785-a18d-10bfdc393dff');
+INSERT INTO `document_ids` (`id`, `type`, `source_id`, `document_id`) VALUES
 (44, 'CAMPUSAI_MATERIALS', '26', 'e337b873-94df-4402-9f87-0e5c18fbee0b'),
 (45, 'CAMPUSAI_MATERIALS', '26', 'a7a49596-4150-4f9a-ab3e-8fab2a8f890b'),
 (46, 'CAMPUSAI_MATERIALS', '26', '7f04c6d9-0b62-478f-9a20-f37e92375e79'),
@@ -544,7 +504,9 @@ INSERT INTO `document_ids` (`id`, `type`, `source_id`, `document_id`) VALUES
 (134, 'CAMPUSAI_MATERIALS', '26', '2d4910f9-87bf-4cdd-b27b-20af32fe079d'),
 (135, 'CAMPUSAI_MATERIALS', '26', 'cb89aa53-dd8c-40c4-8685-26d369b630a7'),
 (136, 'CAMPUSAI_MATERIALS', '26', '26d40b84-bf78-4f36-9de9-b6eb6612681f'),
-(137, 'CAMPUSAI_MATERIALS', '26', '5048e16c-9b8c-486b-96a5-4e99ed804b4c');
+(137, 'CAMPUSAI_MATERIALS', '26', '5048e16c-9b8c-486b-96a5-4e99ed804b4c'),
+(138, 'CAMPUSAI_NOTICE', '31', 'abd1d38d-e268-438c-8595-91e8b47cf3c9'),
+(139, 'CAMPUSAI_NOTICE', '32', 'ee270e36-74ff-4c71-b9d1-3d1eb440b0a2');
 
 INSERT INTO `gen_table` (`table_id`, `table_name`, `table_comment`, `sub_table_name`, `sub_table_fk_name`, `class_name`, `tpl_category`, `package_name`, `module_name`, `business_name`, `function_name`, `function_author`, `gen_type`, `gen_path`, `options`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
 (12, 'SPRING_AI_CHAT_MEMORY', '会话历史', '', NULL, 'SpringAiChatMemory', 'crud', 'com.ruoyi.campusai', 'campusai', 'MEMORY', '会话历史', 'Shawn', '0', '/', '{\"parentMenuId\":\"2038\",\"treeName\":\"\",\"treeParentCode\":\"\",\"parentMenuName\":\"智慧校园\",\"treeCode\":\"\"}', 'admin', '2025-09-11 10:23:02', '', '2025-09-15 14:40:00', '');
@@ -554,7 +516,8 @@ INSERT INTO `gen_table` (`table_id`, `table_name`, `table_comment`, `sub_table_n
 (20, 'document_ids', '文档表', NULL, NULL, 'DocumentIds', 'crud', 'com.ruoyi.campusai', 'campusai', 'ids', '文档', 'Shawn', '0', '/', NULL, 'admin', '2025-09-17 13:45:26', '', NULL, NULL);
 INSERT INTO `gen_table` (`table_id`, `table_name`, `table_comment`, `sub_table_name`, `sub_table_fk_name`, `class_name`, `tpl_category`, `package_name`, `module_name`, `business_name`, `function_name`, `function_author`, `gen_type`, `gen_path`, `options`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
 (21, 'materials', '资料库', '', NULL, 'Materials', 'crud', 'com.ruoyi.campusai', 'campusai', 'materials', '资料库', 'Shawn', '0', '/', '{\"parentMenuId\":\"2038\",\"treeName\":\"\",\"treeParentCode\":\"\",\"parentMenuName\":\"智慧校园\",\"treeCode\":\"\"}', 'admin', '2025-09-17 13:45:26', '', '2025-09-17 16:05:22', ''),
-(22, 'notice', '校园墙', 'document_ids', '', 'Notice', 'crud', 'com.ruoyi.campusai', 'campusai', 'notice', '校园墙', 'Shawn', '0', '/', '{\"parentMenuId\":\"2038\",\"treeName\":\"\",\"treeParentCode\":\"\",\"parentMenuName\":\"智慧校园\",\"treeCode\":\"\"}', 'admin', '2025-09-17 13:45:26', '', '2025-09-17 13:46:30', '');
+(22, 'notice', '校园墙', 'document_ids', '', 'Notice', 'crud', 'com.ruoyi.campusai', 'campusai', 'notice', '校园墙', 'Shawn', '0', '/', '{\"parentMenuId\":\"2038\",\"treeName\":\"\",\"treeParentCode\":\"\",\"parentMenuName\":\"智慧校园\",\"treeCode\":\"\"}', 'admin', '2025-09-17 13:45:26', '', '2025-09-17 13:46:30', ''),
+(24, 'club_reservation', '社团报名', '', NULL, 'ClubReservation', 'crud', 'com.ruoyi.campusai', 'campusai', 'reservation', '社团报名', 'Shawn', '0', '/', '{\"parentMenuId\":\"2038\",\"treeName\":\"\",\"treeParentCode\":\"\",\"parentMenuName\":\"智慧校园\",\"treeCode\":\"\"}', 'admin', '2025-09-18 09:27:38', '', '2025-09-18 09:28:28', '');
 
 INSERT INTO `gen_table_column` (`column_id`, `table_id`, `column_name`, `column_comment`, `column_type`, `java_type`, `java_field`, `is_pk`, `is_increment`, `is_required`, `is_insert`, `is_edit`, `is_list`, `is_query`, `query_type`, `html_type`, `dict_type`, `sort`, `create_by`, `create_time`, `update_by`, `update_time`) VALUES
 (76, 12, 'id', '', 'bigint', 'Long', 'id', '1', '1', NULL, NULL, NULL, NULL, NULL, 'EQ', 'input', '', 1, 'admin', '2025-09-11 10:23:02', NULL, '2025-09-15 14:40:00');
@@ -580,49 +543,49 @@ INSERT INTO `gen_table_column` (`column_id`, `table_id`, `column_name`, `column_
 (116, 22, 'id', '主键', 'int unsigned', 'String', 'id', '1', '1', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', '', 1, 'admin', '2025-09-17 13:45:26', NULL, '2025-09-17 13:46:30'),
 (117, 22, 'title', '标题', 'varchar(50)', 'String', 'title', '0', '0', '1', '1', '1', '1', '1', 'LIKE', 'input', '', 2, 'admin', '2025-09-17 13:45:26', NULL, '2025-09-17 13:46:30'),
 (118, 22, 'content', '内容', 'varchar(300)', 'String', 'content', '0', '0', '1', '1', '1', '1', '1', 'LIKE', 'textarea', '', 3, 'admin', '2025-09-17 13:45:26', NULL, '2025-09-17 13:46:30'),
-(119, 22, 'create_time', '创建时间', 'datetime', 'Date', 'createTime', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'datetime', '', 4, 'admin', '2025-09-17 13:45:26', NULL, '2025-09-17 13:46:30');
+(119, 22, 'create_time', '创建时间', 'datetime', 'Date', 'createTime', '0', '0', NULL, '1', NULL, NULL, NULL, 'EQ', 'datetime', '', 4, 'admin', '2025-09-17 13:45:26', NULL, '2025-09-17 13:46:30'),
+(127, 24, 'id', '', 'int', 'Long', 'id', '1', '1', NULL, '1', NULL, NULL, NULL, 'EQ', 'input', '', 1, 'admin', '2025-09-18 09:27:38', NULL, '2025-09-18 09:28:28'),
+(128, 24, 'club', '预约社团', 'varchar(50)', 'String', 'club', '0', '0', '1', '1', '1', '1', '1', 'LIKE', 'input', '', 2, 'admin', '2025-09-18 09:27:38', NULL, '2025-09-18 09:28:28'),
+(129, 24, 'name', '学生姓名', 'varchar(255)', 'String', 'name', '0', '0', '1', '1', '1', '1', '1', 'LIKE', 'input', '', 3, 'admin', '2025-09-18 09:27:38', NULL, '2025-09-18 09:28:28'),
+(130, 24, 'phone', '联系方式', 'varchar(255)', 'String', 'phone', '0', '0', '1', '1', '1', '1', '1', 'LIKE', 'input', '', 4, 'admin', '2025-09-18 09:27:38', NULL, '2025-09-18 09:28:28'),
+(131, 24, 'major', '专业', 'varchar(50)', 'String', 'major', '0', '0', NULL, '1', '1', '1', '1', 'LIKE', 'input', '', 5, 'admin', '2025-09-18 09:27:38', NULL, '2025-09-18 09:28:28'),
+(132, 24, 'remark', '备注', 'text', 'String', 'remark', '0', '0', NULL, '1', '1', '1', NULL, 'EQ', 'textarea', '', 6, 'admin', '2025-09-18 09:27:38', NULL, '2025-09-18 09:28:28'),
+(133, 24, 'user_id', '学号', 'varchar(50)', 'String', 'userId', '0', '0', NULL, '1', '1', '1', '1', 'LIKE', 'input', '', 7, 'admin', '2025-09-18 09:27:38', NULL, '2025-09-18 09:28:28');
 
 INSERT INTO `materials` (`id`, `title`, `url`) VALUES
-(26, '高校信息', 'http://192.168.64.100:9005/campusai/20250917164225A003.pdf');
+(26, '高校信息', 'http://192.168.150.101:9005/campusai/20250917164225A003.pdf');
 
 
-INSERT INTO `notice` (`id`, `title`, `content`, `create_time`) VALUES
-(29, '作息与安全', '宿舍楼门禁时间为周日至周四 23:00，周五、周六及节假日 24:00。请合理安排时间，准时归寝，确保人身安全。gogogo\r\n严禁在宿舍内使用明火或违章电器，安全无小事，你我共守护。\r\n离开宿舍时，请务必锁好门窗，保管好个人贵重物品。yesyes', '2025-09-17 14:44:29');
 INSERT INTO `notice` (`id`, `title`, `content`, `create_time`) VALUES
 (30, '作息与安全', '宿舍楼门禁时间为周日至周四 23:00，周五、周六及节假日 24:00。请合理安排时间，准时归寝，确保人身安全。\r\n严禁在宿舍内使用明火或违章电器，安全无小事，你我共守护。\r\n离开宿舍时，请务必锁好门窗，保管好个人贵重物品。', '2025-09-17 14:59:17');
-
-
-INSERT INTO `school` (`id`, `name`, `city`) VALUES
-(1, '昌平校区', '北京');
-INSERT INTO `school` (`id`, `name`, `city`) VALUES
-(2, '顺义校区', '北京');
-INSERT INTO `school` (`id`, `name`, `city`) VALUES
-(3, '杭州校区', '杭州');
-INSERT INTO `school` (`id`, `name`, `city`) VALUES
-(4, '上海校区', '上海'),
-(5, '南京校区', '南京'),
-(6, '西安校区', '西安'),
-(7, '郑州校区', '郑州'),
-(8, '广东校区', '广东'),
-(9, '深圳校区', '深圳');
+INSERT INTO `notice` (`id`, `title`, `content`, `create_time`) VALUES
+(31, '舞动青春舞蹈社', '舞动青春舞蹈社是校园里最具活力与魅力的社团之一。我们为所有热爱舞蹈的同学提供一个释放激情、学习技能、展示自我的平台。无论你是擅长Jazz、Hip-hop、Breaking、K-pop还是中国舞，这里都有专属于你的舞台。社团定期开设不同舞种的零基础教学班和提升班，并组织参加校内迎新、晚会表演以及校际舞蹈大赛。在这里，你不仅能提升舞技，更能收获一群因热爱而相聚的挚友。聚光灯已经为你点亮，舞台中央等待你的绽放。欢迎每一位心怀舞蹈梦的你加入我们，让我们一起用汗水诠释热爱，舞动青春！\r\n', '2025-09-17 17:24:06');
+INSERT INTO `notice` (`id`, `title`, `content`, `create_time`) VALUES
+(32, '炫锋篮球社团', '炫锋篮球社团是汇聚了校内最多篮球狂热分子的大家庭。我们的核心是“无篮球，不兄弟”，旨在为每一位成员提供挥洒汗水、享受竞技快乐的家园。社团活动精彩纷呈，包括日常的定点投篮、体能训练、技巧教学，以及激动人心的3v3“斗牛”赛、5v5全场对抗赛和趣味投篮大赛。我们不仅关注个人技术的提升，更注重团队默契的培养。在这里，每一次助攻、每一次防守都充满了激情与呐喊。无论你的水平如何，只要你对篮球有一颗热爱的心，炫锋篮球社都热烈欢迎你的加入，让我们一起创造更多热血的瞬间！\r\n', '2025-09-17 17:28:48');
 
 INSERT INTO `SPRING_AI_CHAT_MEMORY` (`id`, `conversation_id`, `content`, `type`, `timestamp`) VALUES
-(2763, '1758015540298', '你好', 'USER', '2025-09-16 17:39:04');
+(3823, '1758159271115', '你好', 'USER', '2025-09-18 09:37:45');
 INSERT INTO `SPRING_AI_CHAT_MEMORY` (`id`, `conversation_id`, `content`, `type`, `timestamp`) VALUES
-(2764, '1758015540298', '同学你好呀～不过小智老师发现你还没有提供姓名和学号呢！  \n要先告诉小智你的【姓名】和【学号】哦，这样我们才能开启一段温暖的对话呢～🌟  \n\n（悄悄提醒：提供后我会马上更新会话标题，并用可爱的“XXX同学”来称呼你哟！）', 'ASSISTANT', '2025-09-16 17:39:04');
+(3824, '1758159271115', '同学你好呀～👋  \n在为你提供帮助之前，小智老师需要先知道你的姓名和学号哦，这样我们才能开启一段温暖的对话呢！✨  \n\n请告诉我：\n- 你的姓名\n- 你的学号\n\n等你提供信息后，我就可以立刻帮你啦～😊', 'ASSISTANT', '2025-09-18 09:37:45');
 INSERT INTO `SPRING_AI_CHAT_MEMORY` (`id`, `conversation_id`, `content`, `type`, `timestamp`) VALUES
-(2766, '1758016442381', '你好', 'USER', '2025-09-16 17:54:05');
+(3825, '1758159271115', '我叫王小猫，学号123', 'USER', '2025-09-18 09:37:45');
 INSERT INTO `SPRING_AI_CHAT_MEMORY` (`id`, `conversation_id`, `content`, `type`, `timestamp`) VALUES
-(2767, '1758016442381', '同学你好呀！😊 在开始交流之前，我需要先知道你的姓名和学号哦，这样才能更好地为你服务呢。可以告诉我你是哪位可爱的同学吗？', 'ASSISTANT', '2025-09-16 17:54:05'),
-(3245, '1758099903172', '你好', 'USER', '2025-09-17 17:05:38'),
-(3246, '1758099903172', '同学你好呀～欢迎来找小智老师聊天！✨  \n在开始之前，请先告诉我你的**姓名**和**学号**哦，这样我才能更好地帮助你呢～  \n（输入后我会记住你哒，还会用“名字+同学”来称呼你，超有仪式感的！）😊）', 'ASSISTANT', '2025-09-17 17:05:38'),
-(3247, '1758099903172', '我叫王小猫，学号123', 'USER', '2025-09-17 17:05:38'),
-(3248, '1758099903172', '王小猫同学你好呀～欢迎来找小智老师聊天！✨  \n\n我已经记住你啦，以后就用“王小猫同学”来称呼你，是不是感觉更有归属感了呢？😊  \n\n你现在想了解些什么呢？  \n是想咨询大学生活学习的问题、看看有趣的社团纳新，还是想逛逛校园墙、查查资料库呀？  \n小智老师随时都在哦，等你告诉我呢～ 🌟', 'ASSISTANT', '2025-09-17 17:05:38'),
-(3249, '1758099903172', '查资料库，看看北京大学相关的信息', 'USER', '2025-09-17 17:05:38'),
-(3250, '1758099903172', '王小猫同学你好呀～谢谢你提供的信息，我已经记住你啦！✨\n\n关于你想了解的北京大学相关信息，我查到了以下内容哦：\n\n根据全国普通高等学校名单（截至2025年6月20日），**北京大学**的基本信息如下：\n\n| 项目 | 内容 |\n|------|------|\n| 学校名称 | 北京大学 |\n| 学校标识码 | 4111010001 |\n| 主管部门 | 教育部 |\n| 所在地 | 北京市 |\n| 办学层次 | 本科 |\n\n北京大学是我国顶尖的高等学府之一，历史悠久、学术氛围浓厚，被誉为“中国第一高校”呢～🎓  \n如果你对北大的专业设置、校园生活、招生政策等方面还想了解更多，也可以继续问我哟，我会尽力为你查找和解答！😊', 'ASSISTANT', '2025-09-17 17:05:38');
+(3826, '1758159271115', '王小猫同学你好呀～👋  \n欢迎来到校园助手小智老师这里！✨  \n你现在有什么想了解的吗？比如社团纳新、校园生活咨询、资料查询，还是想看看校园墙的最新动态呢？  \n随时告诉我哦，我会用最温暖的方式帮你解答～(•̀ᴗ•́)و', 'ASSISTANT', '2025-09-18 09:37:45'),
+(3827, '1758159271115', '社团纳新', 'USER', '2025-09-18 09:37:45'),
+(3828, '1758159271115', '王小猫同学你好呀～👋  \n欢迎来到校园助手小智老师这里！✨  \n你现在有什么想了解的吗？比如社团纳新、校园生活咨询、资料查询，还是想看看校园墙的最新动态呢？  \n随时告诉我哦，我会用最温暖的方式帮你解答～(•̀ᴗ•́)و', 'ASSISTANT', '2025-09-18 09:37:45'),
+(3829, '1758159271115', '我想报个社团，请帮我推荐一下', 'USER', '2025-09-18 09:37:45'),
+(3830, '1758159271115', '王小猫同学你好呀～👋  \n很高兴你想加入社团呢！大学的社团生活真的超级丰富多彩，是认识志同道合小伙伴的好机会哦～✨\n\n小智老师想先问问你：你对哪方面的活动比较感兴趣呀？比如：  \n🎨 舞蹈、音乐、绘画等文艺类  \n📚 读书、辩论、学术研究等学术类  \n⚽ 篮球、羽毛球、户外运动等体育类  \n✍️ 书法、摄影、动漫、手工等兴趣类  \n🤝 公益志愿、学生服务等公益类  \n\n告诉我你的兴趣方向吧，小智老师会为你推荐合适的社团哟～(•̀ᴗ•́)و', 'ASSISTANT', '2025-09-18 09:37:45'),
+(3831, '1758159271115', '我喜欢篮球，选篮球吧', 'USER', '2025-09-18 09:37:45'),
+(3832, '1758159271115', '王小猫同学你好呀～👋  \n听说你喜欢篮球，小智老师太开心啦！🏀✨  \n\n根据你的兴趣，我从校园社团库中为你找到了一个超棒的篮球社团，快来看看是不是你的心动选择吧～\n\n| 社团名称 | 活动内容 | 特色亮点 | 加入我们 |\n|--------|--------|--------|--------|\n| 炫锋篮球社团 | 日常定点投篮、体能训练、技巧教学、3v3“斗牛”赛、5v5全场对抗赛、趣味投篮大赛 | “无篮球，不兄弟”！注重技术提升与团队默契，氛围热血又温暖 | 无论水平高低，只要你热爱篮球，都欢迎加入！ |\n\n哇哦～是不是已经感受到球场上的激情啦？🔥  \n如果你想报名**炫锋篮球社团**，请告诉小智老师以下信息哦：\n\n- 你的姓名（已知：王小猫）\n- 学号（已知：123）\n- 所在院系与专业：______（请补充）\n- 联系方式：______（请补充）\n- 备注（可选）：______\n\n填好后，我会帮你生成预约单，一起开启热血篮球之旅哟！💪😄', 'ASSISTANT', '2025-09-18 09:37:45'),
+(3833, '1758159271115', '我的学号是321，请记住，并更新一下', 'USER', '2025-09-18 09:37:45'),
+(3834, '1758159271115', '王小猫同学你好呀～👋  \n你的信息已经成功更新啦！学号321已记住，现在我们可以愉快地继续聊天啦～✨\n\n你刚才说想报名社团，而且特别喜欢篮球呢！🏀  \n小智老师这就为你推荐一个超棒的篮球社团，快来看看是不是你的心动选择吧～\n\n| 社团名称 | 活动内容 | 特色亮点 | 加入我们 |\n|--------|--------|--------|--------|\n| 炫锋篮球社团 | 日常定点投篮、体能训练、技巧教学、3v3“斗牛”赛、5v5全场对抗赛、趣味投篮大赛 | “无篮球，不兄弟”！注重技术提升与团队默契，氛围热血又温暖 | 无论水平高低，只要你热爱篮球，都欢迎加入！ |\n\n哇哦～是不是已经感受到球场上的激情啦？🔥  \n接下来，只需要补充以下信息，小智老师就能帮你完成报名咯：\n\n- 所在院系与专业：______（请补充）  \n- 联系方式：______（请补充）  \n- 备注（可选）：______\n\n填好后告诉我哟，我们一起开启热血篮球之旅！💪😄', 'ASSISTANT', '2025-09-18 09:37:45'),
+(3835, '1758159271115', '我是计算机系，专业是人工智能', 'USER', '2025-09-18 09:37:45'),
+(3836, '1758159271115', '王小猫同学你好呀～👋  \n你的信息已经成功更新啦！学号321已记住，现在我们可以愉快地继续聊天啦～✨\n\n你刚才说想报名社团，而且特别喜欢篮球呢！🏀  \n小智老师这就为你推荐一个超棒的篮球社团，快来看看是不是你的心动选择吧～\n\n| 社团名称 | 活动内容 | 特色亮点 | 加入我们 |\n|--------|--------|--------|--------|\n| 炫锋篮球社团 | 日常定点投篮、体能训练、技巧教学、3v3“斗牛”赛、5v5全场对抗赛、趣味投篮大赛 | “无篮球，不兄弟”！注重技术提升与团队默契，氛围热血又温暖 | 无论水平高低，只要你热爱篮球，都欢迎加入！ |\n\n哇哦～是不是已经感受到球场上的激情啦？🔥  \n接下来，只需要补充以下信息，小智老师就能帮你完成报名咯：\n\n- 所在院系与专业：计算机系 人工智能（已补充）  \n- 联系方式：______（请提供你的手机号或微信等联系方式）  \n- 备注（可选）：______\n\n填好后告诉我哟，我们一起开启热血篮球之旅！💪😄', 'ASSISTANT', '2025-09-18 09:37:45'),
+(3837, '1758159271115', '我的手机号是：13333332222，我身体很壮实，可以打中锋', 'USER', '2025-09-18 09:37:45'),
+(3838, '1758159271115', '王小猫同学，你好呀～👋\n\n太棒啦！小智老师已经成功为你提交了社团预约申请，现在要给你一个大大的 ✅ 好消息！\n\n🎉 你已成功预约：**炫锋篮球社团**  \n📌 预约单号：`8`  \n📍 所在院系专业：计算机系 人工智能  \n📞 联系方式：13333332222  \n💬 备注：身体很壮实，可以打中锋（哇哦～未来的内线支柱来啦！🔥）\n\n社团负责人会尽快通过电话联系你，确认入社时间和首次活动安排哟～🏀✨\n\n记得保持手机畅通，也别忘了准备一双舒服的球鞋，球场见英姿飒爽的你！💪😄\n\n如果还想了解其他社团、校园墙动态或学习资料，随时告诉小智老师哦～我一直都在～🧡', 'ASSISTANT', '2025-09-18 09:37:45');
 
 INSERT INTO `spring_ai_chat_record` (`id`, `title`, `user_id`, `type`, `create_time`) VALUES
-('1758099903172', '王小猫', '123', 'service', '2025-09-17 17:05:01');
+('1758159271115', '王小猫', '321', 'service', '2025-09-18 09:34:27');
 
 
 INSERT INTO `sys_config` (`config_id`, `config_name`, `config_key`, `config_value`, `config_type`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
@@ -795,7 +758,15 @@ INSERT INTO `sys_logininfor` (`info_id`, `login_name`, `ipaddr`, `login_location
 (62, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-17 15:10:25'),
 (63, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-17 15:47:28'),
 (64, 'user', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-17 16:07:13'),
-(65, 'user', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-17 16:27:27');
+(65, 'user', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-17 16:27:27'),
+(66, 'user', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-09-17 17:55:16'),
+(67, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-17 17:55:19'),
+(68, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-17 17:58:12'),
+(69, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-18 09:23:52'),
+(70, 'user', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-18 09:40:22'),
+(71, 'user', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '退出成功', '2025-09-18 09:40:28'),
+(72, 'admin', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-18 09:40:30'),
+(73, 'user', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', '0', '登录成功', '2025-09-18 11:01:36');
 
 INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `url`, `target`, `menu_type`, `visible`, `is_refresh`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
 (1, '系统管理', 0, 2, '#', 'menuItem', 'M', '0', '1', '', 'fa fa-gear', 'admin', '2023-12-27 12:02:42', 'admin', '2023-12-29 18:36:31', '系统管理目录');
@@ -896,12 +867,12 @@ INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `url`,
 (2058, '会话记录查询', 2057, 1, '#', '', 'F', '0', '1', 'campusai:record:list', '#', 'admin', '2025-09-15 14:43:53', '', NULL, ''),
 (2059, '会话记录新增', 2057, 2, '#', '', 'F', '0', '1', 'campusai:record:add', '#', 'admin', '2025-09-15 14:43:53', '', NULL, ''),
 (2060, '会话记录修改', 2057, 3, '#', '', 'F', '0', '1', 'campusai:record:edit', '#', 'admin', '2025-09-15 14:43:53', '', NULL, ''),
-(2061, '会话记录删除', 2057, 4, '#', '', 'F', '0', '1', 'campusai:record:remove', '#', 'admin', '2025-09-15 14:43:53', '', NULL, '');
-INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `url`, `target`, `menu_type`, `visible`, `is_refresh`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
+(2061, '会话记录删除', 2057, 4, '#', '', 'F', '0', '1', 'campusai:record:remove', '#', 'admin', '2025-09-15 14:43:53', '', NULL, ''),
 (2062, '会话记录导出', 2057, 5, '#', '', 'F', '0', '1', 'campusai:record:export', '#', 'admin', '2025-09-15 14:43:53', '', NULL, ''),
 (2069, '校园墙', 2038, 1, '/campusai/notice', '', 'C', '0', '1', 'campusai:notice:view', '#', 'admin', '2025-09-16 16:14:59', '', NULL, '校园墙菜单'),
 (2070, '校园墙查询', 2069, 1, '#', '', 'F', '0', '1', 'campusai:notice:list', '#', 'admin', '2025-09-16 16:14:59', '', NULL, ''),
-(2071, '校园墙新增', 2069, 2, '#', '', 'F', '0', '1', 'campusai:notice:add', '#', 'admin', '2025-09-16 16:14:59', '', NULL, ''),
+(2071, '校园墙新增', 2069, 2, '#', '', 'F', '0', '1', 'campusai:notice:add', '#', 'admin', '2025-09-16 16:14:59', '', NULL, '');
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `url`, `target`, `menu_type`, `visible`, `is_refresh`, `perms`, `icon`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
 (2072, '校园墙修改', 2069, 3, '#', '', 'F', '0', '1', 'campusai:notice:edit', '#', 'admin', '2025-09-16 16:14:59', '', NULL, ''),
 (2073, '校园墙删除', 2069, 4, '#', '', 'F', '0', '1', 'campusai:notice:remove', '#', 'admin', '2025-09-16 16:14:59', '', NULL, ''),
 (2074, '校园墙导出', 2069, 5, '#', '', 'F', '0', '1', 'campusai:notice:export', '#', 'admin', '2025-09-16 16:14:59', '', NULL, ''),
@@ -910,7 +881,13 @@ INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `url`,
 (2077, '文档库新增', 2075, 2, '#', '', 'F', '0', '1', 'campusai:materials:add', '#', 'admin', '2025-09-17 09:32:20', '', NULL, ''),
 (2078, '文档库修改', 2075, 3, '#', '', 'F', '0', '1', 'campusai:materials:edit', '#', 'admin', '2025-09-17 09:32:20', '', NULL, ''),
 (2079, '文档库删除', 2075, 4, '#', '', 'F', '0', '1', 'campusai:materials:remove', '#', 'admin', '2025-09-17 09:32:20', '', NULL, ''),
-(2080, '文档库导出', 2075, 5, '#', '', 'F', '0', '1', 'campusai:materials:export', '#', 'admin', '2025-09-17 09:32:20', '', NULL, '');
+(2080, '文档库导出', 2075, 5, '#', '', 'F', '0', '1', 'campusai:materials:export', '#', 'admin', '2025-09-17 09:32:20', '', NULL, ''),
+(2081, '社团报名', 2038, 1, '/campusai/reservation', '', 'C', '0', '1', 'campusai:reservation:view', '#', 'admin', '2025-09-17 18:03:12', '', NULL, '社团报名菜单'),
+(2082, '社团报名查询', 2081, 1, '#', '', 'F', '0', '1', 'campusai:reservation:list', '#', 'admin', '2025-09-17 18:03:13', '', NULL, ''),
+(2083, '社团报名新增', 2081, 2, '#', '', 'F', '0', '1', 'campusai:reservation:add', '#', 'admin', '2025-09-17 18:03:13', '', NULL, ''),
+(2084, '社团报名修改', 2081, 3, '#', '', 'F', '0', '1', 'campusai:reservation:edit', '#', 'admin', '2025-09-17 18:03:13', '', NULL, ''),
+(2085, '社团报名删除', 2081, 4, '#', '', 'F', '0', '1', 'campusai:reservation:remove', '#', 'admin', '2025-09-17 18:03:13', '', NULL, ''),
+(2086, '社团报名导出', 2081, 5, '#', '', 'F', '0', '1', 'campusai:reservation:export', '#', 'admin', '2025-09-17 18:03:13', '', NULL, '');
 
 INSERT INTO `sys_notice` (`notice_id`, `notice_title`, `notice_type`, `notice_content`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`, `document_id`) VALUES
 (1, '温馨提醒：618活动即将开始', '2', '新版本内容', '0', 'admin', '2023-12-27 12:02:52', 'user', '2024-01-02 09:51:27', '管理员', NULL);
@@ -942,8 +919,7 @@ INSERT INTO `sys_oper_log` (`oper_id`, `title`, `business_type`, `method`, `requ
 (12, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"12\"],\"tableName\":[\"SPRING_AI_CHAT_MEMORY\"],\"tableComment\":[\"会话历史\"],\"className\":[\"SpringAiChatMemory\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"76\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"\"],\"columns[0].javaType\":[\"Long\"],\"columns[0].javaField\":[\"id\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"77\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"会话id\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"conversationId\"],\"columns[1].queryType\":[\"EQ\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"78\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"聊天内容\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"content\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"EQ\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"summernote\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"79\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"聊天类型\"],\"columns[3].javaType\":[\"String\"],\"columns[3].javaField\":[\"type\"],\"columns[3].queryType\":[\"EQ\"],\"columns[3].isRequired\":[\"1\"],\"columns[3].htmlType\":[\"select\"],\"columns[3].dictType\":[\"\"],\"columns[4].columnId\":[\"80\"],\"columns[4].sort\":[\"5\"],\"columns[4].columnComment\":[\"发送时间\"],\"columns[4].javaType\":[\"Date\"],\"columns[4].javaField\":[\"timestamp\"],\"columns[4].isList\":[\"1\"],\"columns[4].isQuery\":[\"1\"],\"columns[4].queryType\":[\"EQ\"],\"columns[4].isRequired\":[\"1\"],\"columns[4].htmlType\":[\"datetime\"],\"columns[4].dictType\":[\"\"],\"tplCategory\":[\"crud\"],\"packageName\":[\"com.ruoyi.lottery\"],\"moduleName\":[\"lottery\"],\"businessName\":[\"MEMORY\"],\"functionName\":[\"会话历史\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"subTableName\":[\"\"],\"params[treeCode]\":[\"\"],\"params[treeParentCode]\":[\"\"],\"params[treeName]\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-11 10:51:11', 42),
 (13, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.batchGenCode()', 'GET', 1, 'admin', '研发部门', '/tool/gen/batchGenCode', '127.0.0.1', '内网IP', '{\"tables\":[\"SPRING_AI_CHAT_MEMORY,spring_ai_chat_record\"]}', NULL, 0, NULL, '2025-09-11 10:51:17', 190),
 (14, '角色管理', 2, 'com.ruoyi.web.controller.system.SysRoleController.editSave()', 'POST', 1, 'admin', '研发部门', '/system/role/edit', '127.0.0.1', '内网IP', '{\"roleId\":[\"100\"],\"roleName\":[\"活动运营\"],\"roleKey\":[\"yunying\"],\"roleSort\":[\"3\"],\"status\":[\"0\"],\"remark\":[\"\"],\"menuIds\":[\"2038,2039,2040,2041,2042,2043,2044,2045,2046,2047,2048,2049,2050,2,111,112,113,1,107,1035,1036,1037,1038,108,500,1039,1040,1041,1042,501,1043,1044,1045,1046\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-11 15:03:42', 74),
-(15, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"12\"],\"tableName\":[\"SPRING_AI_CHAT_MEMORY\"],\"tableComment\":[\"会话历史\"],\"className\":[\"SpringAiChatMemory\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"76\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"\"],\"columns[0].javaType\":[\"Long\"],\"columns[0].javaField\":[\"id\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"77\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"会话id\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"conversationId\"],\"columns[1].queryType\":[\"EQ\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"78\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"聊天内容\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"content\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"EQ\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"summernote\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"79\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"聊天类型\"],\"columns[3].javaType\":[\"String\"],\"columns[3].javaField\":[\"type\"],\"columns[3].queryType\":[\"EQ\"],\"columns[3].isRequired\":[\"1\"],\"columns[3].htmlType\":[\"select\"],\"columns[3].dictType\":[\"\"],\"columns[4].columnId\":[\"80\"],\"columns[4].sort\":[\"5\"],\"columns[4].columnComment\":[\"发送时间\"],\"columns[4].javaType\":[\"Date\"],\"columns[4].javaField\":[\"timestamp\"],\"columns[4].isList\":[\"1\"],\"columns[4].isQuery\":[\"1\"],\"columns[4].queryType\":[\"EQ\"],\"columns[4].isRequired\":[\"1\"],\"columns[4].htmlType\":[\"datetime\"],\"columns[4].dictType\":[\"\"],\"tplCategory\":[\"crud\"],\"packageName\":[\"com.ruoyi.campusai\"],\"moduleName\":[\"campusai\"],\"businessName\":[\"MEMORY\"],\"functionName\":[\"会话历史\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"subTableName\":[\"\"],\"params[treeCode]\":[\"\"],\"params[treeParentCode]\":[\"\"],\"params[treeName]\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-15 14:40:00', 94);
-INSERT INTO `sys_oper_log` (`oper_id`, `title`, `business_type`, `method`, `request_method`, `operator_type`, `oper_name`, `dept_name`, `oper_url`, `oper_ip`, `oper_location`, `oper_param`, `json_result`, `status`, `error_msg`, `oper_time`, `cost_time`) VALUES
+(15, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"12\"],\"tableName\":[\"SPRING_AI_CHAT_MEMORY\"],\"tableComment\":[\"会话历史\"],\"className\":[\"SpringAiChatMemory\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"76\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"\"],\"columns[0].javaType\":[\"Long\"],\"columns[0].javaField\":[\"id\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"77\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"会话id\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"conversationId\"],\"columns[1].queryType\":[\"EQ\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"78\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"聊天内容\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"content\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"EQ\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"summernote\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"79\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"聊天类型\"],\"columns[3].javaType\":[\"String\"],\"columns[3].javaField\":[\"type\"],\"columns[3].queryType\":[\"EQ\"],\"columns[3].isRequired\":[\"1\"],\"columns[3].htmlType\":[\"select\"],\"columns[3].dictType\":[\"\"],\"columns[4].columnId\":[\"80\"],\"columns[4].sort\":[\"5\"],\"columns[4].columnComment\":[\"发送时间\"],\"columns[4].javaType\":[\"Date\"],\"columns[4].javaField\":[\"timestamp\"],\"columns[4].isList\":[\"1\"],\"columns[4].isQuery\":[\"1\"],\"columns[4].queryType\":[\"EQ\"],\"columns[4].isRequired\":[\"1\"],\"columns[4].htmlType\":[\"datetime\"],\"columns[4].dictType\":[\"\"],\"tplCategory\":[\"crud\"],\"packageName\":[\"com.ruoyi.campusai\"],\"moduleName\":[\"campusai\"],\"businessName\":[\"MEMORY\"],\"functionName\":[\"会话历史\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"subTableName\":[\"\"],\"params[treeCode]\":[\"\"],\"params[treeParentCode]\":[\"\"],\"params[treeName]\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-15 14:40:00', 94),
 (16, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"13\"],\"tableName\":[\"spring_ai_chat_record\"],\"tableComment\":[\"会话记录\"],\"className\":[\"SpringAiChatRecord\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"81\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"会话id\"],\"columns[0].javaType\":[\"String\"],\"columns[0].javaField\":[\"id\"],\"columns[0].isInsert\":[\"1\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"82\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"标题\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"title\"],\"columns[1].isInsert\":[\"1\"],\"columns[1].isEdit\":[\"1\"],\"columns[1].isList\":[\"1\"],\"columns[1].isQuery\":[\"1\"],\"columns[1].queryType\":[\"EQ\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"83\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"用户id\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"userId\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"EQ\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"input\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"84\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"会话类型\"],\"columns[3].javaType\":[\"String\"],\"columns[3].javaField\":[\"type\"],\"columns[3].isInsert\":[\"1\"],\"columns[3].isEdit\":[\"1\"],\"columns[3].isList\":[\"1\"],\"columns[3].queryType\":[\"EQ\"],\"columns[3].isRequired\":[\"1\"],\"columns[3].htmlType\":[\"select\"],\"columns[3].dictType\":[\"\"],\"columns[4].columnId\":[\"85\"],\"columns[4].sort\":[\"5\"],\"columns[4].columnComment\":[\"创建时间\"],\"columns[4].javaType\":[\"Date\"],\"columns[4].javaField\":[\"createTime\"],\"columns[4].isInsert\":[\"1\"],\"columns[4].queryType\":[\"EQ\"],\"columns[4].isRequired\":[\"1\"],\"columns[4].htmlType\":[\"datetime\"],\"columns[4].dictType\":[\"\"],\"tplCategory\":[\"sub\"],\"packageName\":[\"com.ruoyi.campusai\"],\"moduleName\":[\"campusai\"],\"businessName\":[\"record\"],\"functionName\":[\"会话记录\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"su', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-15 14:40:16', 41),
 (17, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.batchGenCode()', 'GET', 1, 'admin', '研发部门', '/tool/gen/batchGenCode', '127.0.0.1', '内网IP', '{\"tables\":[\"SPRING_AI_CHAT_MEMORY,spring_ai_chat_record\"]}', NULL, 0, NULL, '2025-09-15 14:40:24', 562),
 (18, '角色管理', 2, 'com.ruoyi.web.controller.system.SysRoleController.editSave()', 'POST', 1, 'admin', '研发部门', '/system/role/edit', '127.0.0.1', '内网IP', '{\"roleId\":[\"100\"],\"roleName\":[\"活动运营\"],\"roleKey\":[\"yunying\"],\"roleSort\":[\"3\"],\"status\":[\"0\"],\"remark\":[\"\"],\"menuIds\":[\"2038,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2,111,112,113,1,107,1035,1036,1037,1038,108,500,1039,1040,1041,1042,501,1043,1044,1045,1046\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-15 14:45:29', 215),
@@ -959,14 +935,15 @@ INSERT INTO `sys_oper_log` (`oper_id`, `title`, `business_type`, `method`, `requ
 (28, '角色管理', 2, 'com.ruoyi.web.controller.system.SysRoleController.editSave()', 'POST', 1, 'admin', '研发部门', '/system/role/edit', '127.0.0.1', '内网IP', '{\"roleId\":[\"100\"],\"roleName\":[\"活动运营\"],\"roleKey\":[\"yunying\"],\"roleSort\":[\"3\"],\"status\":[\"0\"],\"remark\":[\"\"],\"menuIds\":[\"2038,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2063,2064,2065,2066,2067,2068,1,107,1035,1036,1037,1038,108,500,1039,1040,1041,1042,501,1043,1044,1045,1046,2,111,112,113\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 09:54:52', 252),
 (29, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"14\"],\"tableName\":[\"document\"],\"tableComment\":[\"文档表\"],\"className\":[\"Document\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"86\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"主键\"],\"columns[0].javaType\":[\"String\"],\"columns[0].javaField\":[\"id\"],\"columns[0].isInsert\":[\"1\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"87\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"名称\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"title\"],\"columns[1].isInsert\":[\"1\"],\"columns[1].isEdit\":[\"1\"],\"columns[1].isList\":[\"1\"],\"columns[1].isQuery\":[\"1\"],\"columns[1].queryType\":[\"LIKE\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"88\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"文档链接\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"url\"],\"columns[2].isInsert\":[\"1\"],\"columns[2].isEdit\":[\"1\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"LIKE\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"upload\"],\"columns[2].dictType\":[\"\"],\"tplCategory\":[\"crud\"],\"packageName\":[\"com.ruoyi.campusai\"],\"moduleName\":[\"campusai\"],\"businessName\":[\"document\"],\"functionName\":[\"文档管理\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"subTableName\":[\"\"],\"params[treeCode]\":[\"\"],\"params[treeParentCode]\":[\"\"],\"params[treeName]\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 09:55:13', 34),
 (30, '文档', 3, 'com.ruoyi.campusai.controller.DocumentController.remove()', 'POST', 1, 'admin', '研发部门', '/campusai/document/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"20\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 09:55:19', 9),
-(31, '文档', 1, 'com.ruoyi.campusai.controller.DocumentController.addSave()', 'POST', 1, 'admin', '研发部门', '/campusai/document/add', '127.0.0.1', '内网IP', '{\"title\":[\"mq分享\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250916095535A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 09:55:36', 12),
+(31, '文档', 1, 'com.ruoyi.campusai.controller.DocumentController.addSave()', 'POST', 1, 'admin', '研发部门', '/campusai/document/add', '127.0.0.1', '内网IP', '{\"title\":[\"mq分享\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250916095535A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 09:55:36', 12),
 (32, '通知公告', 1, 'com.ruoyi.web.controller.system.SysNoticeController.addSave()', 'POST', 1, 'user', '研发部门', '/system/notice/add', '127.0.0.1', '内网IP', '{\"noticeTitle\":[\"123\"],\"noticeType\":[\"1\"],\"noticeContent\":[\"<p>123123</p>\"],\"status\":[\"0\"]}', NULL, 1, 'Cannot invoke \"java.lang.Long.longValue()\" because the return value of \"com.ruoyi.system.domain.SysNotice.getNoticeId()\" is null', '2025-09-16 15:46:36', 99),
-(33, '文档', 1, 'com.ruoyi.campusai.controller.DocumentController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/add', '127.0.0.1', '内网IP', '{\"title\":[\"123312\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250916160047A001.pdf\"]}', NULL, 1, 'SimpleMessageConverter only supports String, byte[] and Serializable payloads, received: com.ruoyi.common.core.domain.MessageDto', '2025-09-16 16:00:49', 86),
+(33, '文档', 1, 'com.ruoyi.campusai.controller.DocumentController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/add', '127.0.0.1', '内网IP', '{\"title\":[\"123312\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250916160047A001.pdf\"]}', NULL, 1, 'SimpleMessageConverter only supports String, byte[] and Serializable payloads, received: com.ruoyi.common.core.domain.MessageDto', '2025-09-16 16:00:49', 86),
 (34, '文档', 3, 'com.ruoyi.campusai.controller.DocumentController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/document/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"22\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:01:33', 103),
-(35, '文档', 1, 'com.ruoyi.campusai.controller.DocumentController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/add', '127.0.0.1', '内网IP', '{\"title\":[\"爱仕达的\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250916160141A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:01:43', 202),
+(35, '文档', 1, 'com.ruoyi.campusai.controller.DocumentController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/add', '127.0.0.1', '内网IP', '{\"title\":[\"爱仕达的\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250916160141A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:01:43', 202),
 (36, '代码生成', 6, 'com.ruoyi.generator.controller.GenController.importTableSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/importTable', '127.0.0.1', '内网IP', '{\"tables\":[\"notice\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:13:25', 42),
 (37, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"15\"],\"tableName\":[\"notice\"],\"tableComment\":[\"文档表\"],\"className\":[\"Notice\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"89\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"主键\"],\"columns[0].javaType\":[\"String\"],\"columns[0].javaField\":[\"id\"],\"columns[0].isInsert\":[\"1\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"90\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"标题\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"title\"],\"columns[1].isInsert\":[\"1\"],\"columns[1].isEdit\":[\"1\"],\"columns[1].isList\":[\"1\"],\"columns[1].isQuery\":[\"1\"],\"columns[1].queryType\":[\"EQ\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"91\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"内容\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"content\"],\"columns[2].isInsert\":[\"1\"],\"columns[2].isEdit\":[\"1\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"EQ\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"summernote\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"92\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"创建时间\"],\"columns[3].javaType\":[\"Date\"],\"columns[3].javaField\":[\"createTime\"],\"columns[3].isInsert\":[\"1\"],\"columns[3].queryType\":[\"EQ\"],\"columns[3].htmlType\":[\"datetime\"],\"columns[3].dictType\":[\"\"],\"tplCategory\":[\"crud\"],\"packageName\":[\"com.ruoyi.campusai\"],\"moduleName\":[\"campusai\"],\"businessName\":[\"notice\"],\"functionName\":[\"校园墙\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"subTableName\":[\"\"],\"params[treeCode]\":[\"\"],\"params[treeParentCode]\":[\"\"],\"params[treeName]\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:13:56', 30),
-(38, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"15\"],\"tableName\":[\"notice\"],\"tableComment\":[\"文档表\"],\"className\":[\"Notice\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"89\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"主键\"],\"columns[0].javaType\":[\"String\"],\"columns[0].javaField\":[\"id\"],\"columns[0].isInsert\":[\"1\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"90\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"标题\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"title\"],\"columns[1].isInsert\":[\"1\"],\"columns[1].isEdit\":[\"1\"],\"columns[1].isList\":[\"1\"],\"columns[1].isQuery\":[\"1\"],\"columns[1].queryType\":[\"EQ\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"91\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"内容\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"content\"],\"columns[2].isInsert\":[\"1\"],\"columns[2].isEdit\":[\"1\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"EQ\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"summernote\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"92\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"创建时间\"],\"columns[3].javaType\":[\"Date\"],\"columns[3].javaField\":[\"createTime\"],\"columns[3].isInsert\":[\"1\"],\"columns[3].isQuery\":[\"1\"],\"columns[3].queryType\":[\"BETWEEN\"],\"columns[3].htmlType\":[\"datetime\"],\"columns[3].dictType\":[\"\"],\"tplCategory\":[\"crud\"],\"packageName\":[\"com.ruoyi.campusai\"],\"moduleName\":[\"campusai\"],\"businessName\":[\"notice\"],\"functionName\":[\"校园墙\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"subTableName\":[\"\"],\"params[treeCode]\":[\"\"],\"params[treeParentCode]\":[\"\"],\"params[treeName]\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:14:26', 30),
+(38, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"15\"],\"tableName\":[\"notice\"],\"tableComment\":[\"文档表\"],\"className\":[\"Notice\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"89\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"主键\"],\"columns[0].javaType\":[\"String\"],\"columns[0].javaField\":[\"id\"],\"columns[0].isInsert\":[\"1\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"90\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"标题\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"title\"],\"columns[1].isInsert\":[\"1\"],\"columns[1].isEdit\":[\"1\"],\"columns[1].isList\":[\"1\"],\"columns[1].isQuery\":[\"1\"],\"columns[1].queryType\":[\"EQ\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"91\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"内容\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"content\"],\"columns[2].isInsert\":[\"1\"],\"columns[2].isEdit\":[\"1\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"EQ\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"summernote\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"92\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"创建时间\"],\"columns[3].javaType\":[\"Date\"],\"columns[3].javaField\":[\"createTime\"],\"columns[3].isInsert\":[\"1\"],\"columns[3].isQuery\":[\"1\"],\"columns[3].queryType\":[\"BETWEEN\"],\"columns[3].htmlType\":[\"datetime\"],\"columns[3].dictType\":[\"\"],\"tplCategory\":[\"crud\"],\"packageName\":[\"com.ruoyi.campusai\"],\"moduleName\":[\"campusai\"],\"businessName\":[\"notice\"],\"functionName\":[\"校园墙\"],\"params[parentMenuId]\":[\"2038\"],\"params[parentMenuName]\":[\"智慧校园\"],\"genType\":[\"0\"],\"genPath\":[\"/\"],\"subTableName\":[\"\"],\"params[treeCode]\":[\"\"],\"params[treeParentCode]\":[\"\"],\"params[treeName]\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:14:26', 30);
+INSERT INTO `sys_oper_log` (`oper_id`, `title`, `business_type`, `method`, `request_method`, `operator_type`, `oper_name`, `dept_name`, `oper_url`, `oper_ip`, `oper_location`, `oper_param`, `json_result`, `status`, `error_msg`, `oper_time`, `cost_time`) VALUES
 (39, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.download()', 'GET', 1, 'admin', '研发部门', '/tool/gen/download/notice', '127.0.0.1', '内网IP', '\"notice\"', NULL, 0, NULL, '2025-09-16 16:14:35', 89),
 (40, '角色管理', 2, 'com.ruoyi.web.controller.system.SysRoleController.editSave()', 'POST', 1, 'admin', '研发部门', '/system/role/edit', '127.0.0.1', '内网IP', '{\"roleId\":[\"100\"],\"roleName\":[\"活动运营\"],\"roleKey\":[\"yunying\"],\"roleSort\":[\"3\"],\"status\":[\"0\"],\"remark\":[\"\"],\"menuIds\":[\"2038,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2063,2064,2065,2066,2067,2068,2069,2070,2071,2072,2073,2074,1,107,1035,1036,1037,1038,108,500,1039,1040,1041,1042,501,1043,1044,1045,1046,2,111,112,113\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:15:42', 203),
 (41, '校园墙', 3, 'com.ruoyi.campusai.controller.NoticeController.remove()', 'POST', 1, 'admin', '研发部门', '/campusai/notice/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"21\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:15:50', 8),
@@ -977,8 +954,8 @@ INSERT INTO `sys_oper_log` (`oper_id`, `title`, `business_type`, `method`, `requ
 (46, '校园墙', 1, 'com.ruoyi.campusai.controller.NoticeController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/notice/add', '127.0.0.1', '内网IP', '{\"title\":[\"今天星期几？\"],\"content\":[\"<p>今天星期几？你知道不</p>\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:22:05', 338),
 (47, '校园墙', 2, 'com.ruoyi.campusai.controller.NoticeController.editSave()', 'POST', 1, 'user', '研发部门', '/campusai/notice/edit', '127.0.0.1', '内网IP', '{\"id\":[\"24\"],\"title\":[\"禁止占座\"],\"content\":[\"<p>自习室占座严重，禁止占座12313</p>\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:44:44', 338),
 (48, '校园墙', 3, 'com.ruoyi.campusai.controller.NoticeController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/notice/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"26\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:45:05', 11),
-(49, '文档', 2, 'com.ruoyi.campusai.controller.DocumentController.editSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/edit', '127.0.0.1', '内网IP', '{\"id\":[\"21\"],\"title\":[\"mq分享\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250916164738A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:47:40', 359),
-(50, '文档', 2, 'com.ruoyi.campusai.controller.DocumentController.editSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/edit', '127.0.0.1', '内网IP', '{\"id\":[\"23\"],\"title\":[\"爱仕达的\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250916160141A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:47:52', 9),
+(49, '文档', 2, 'com.ruoyi.campusai.controller.DocumentController.editSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/edit', '127.0.0.1', '内网IP', '{\"id\":[\"21\"],\"title\":[\"mq分享\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250916164738A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:47:40', 359),
+(50, '文档', 2, 'com.ruoyi.campusai.controller.DocumentController.editSave()', 'POST', 1, 'user', '研发部门', '/campusai/document/edit', '127.0.0.1', '内网IP', '{\"id\":[\"23\"],\"title\":[\"爱仕达的\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250916160141A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:47:52', 9),
 (51, '文档', 3, 'com.ruoyi.campusai.controller.DocumentController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/document/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"23\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 16:47:55', 35),
 (52, '校园墙', 1, 'com.ruoyi.campusai.controller.NoticeController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/notice/add', '127.0.0.1', '内网IP', '{\"title\":[\"校园守则\"],\"content\":[\"<p>校园内禁止大声喧哗</p>\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 18:32:18', 279),
 (53, '校园墙', 2, 'com.ruoyi.campusai.controller.NoticeController.editSave()', 'POST', 1, 'user', '研发部门', '/campusai/notice/edit', '127.0.0.1', '内网IP', '{\"id\":[\"27\"],\"title\":[\"校园守则\"],\"content\":[\"<p>校园内禁止大声喧哗，也不能唱歌</p>\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-16 18:36:36', 10),
@@ -1013,13 +990,25 @@ INSERT INTO `sys_oper_log` (`oper_id`, `title`, `business_type`, `method`, `requ
 (82, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.batchGenCode()', 'GET', 1, 'admin', '研发部门', '/tool/gen/batchGenCode', '127.0.0.1', '内网IP', '{\"tables\":[\"materials\"]}', NULL, 0, NULL, '2025-09-17 16:05:35', 584),
 (83, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"MQ学习资料\"],\"url\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:09:37', 68),
 (84, '资料库', 3, 'com.ruoyi.campusai.controller.MaterialsController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/materials/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"22\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:10:59', 71),
-(85, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"MQ学习资料\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250917161117A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:11:18', 8),
+(85, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"MQ学习资料\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250917161117A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:11:18', 8),
 (86, '资料库', 3, 'com.ruoyi.campusai.controller.MaterialsController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/materials/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"23\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:17:11', 13),
-(87, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"MQ学习资料\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250917162749A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:27:50', 316),
+(87, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"MQ学习资料\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250917162749A001.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:27:50', 316),
 (88, '资料库', 3, 'com.ruoyi.campusai.controller.MaterialsController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/materials/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"24\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:38:45', 14),
 (89, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"高校信息\"],\"url\":[\"\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:39:51', 9),
 (90, '资料库', 3, 'com.ruoyi.campusai.controller.MaterialsController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/materials/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"25\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:42:00', 29),
-(91, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"高校信息\"],\"url\":[\"http://192.168.64.100:9005/campusai/20250917164225A003.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:42:25', 8);
+(91, '资料库', 1, 'com.ruoyi.campusai.controller.MaterialsController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/materials/add', '127.0.0.1', '内网IP', '{\"title\":[\"高校信息\"],\"url\":[\"http://192.168.150.101:9005/campusai/20250917164225A003.pdf\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 16:42:25', 8),
+(92, '校园墙', 3, 'com.ruoyi.campusai.controller.NoticeController.remove()', 'POST', 1, 'user', '研发部门', '/campusai/notice/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"29\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 17:23:33', 21),
+(93, '校园墙', 1, 'com.ruoyi.campusai.controller.NoticeController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/notice/add', '127.0.0.1', '内网IP', '{\"title\":[\"舞动青春舞蹈社\"],\"content\":[\"舞动青春舞蹈社是校园里最具活力与魅力的社团之一。我们为所有热爱舞蹈的同学提供一个释放激情、学习技能、展示自我的平台。无论你是擅长Jazz、Hip-hop、Breaking、K-pop还是中国舞，这里都有专属于你的舞台。社团定期开设不同舞种的零基础教学班和提升班，并组织参加校内迎新、晚会表演以及校际舞蹈大赛。在这里，你不仅能提升舞技，更能收获一群因热爱而相聚的挚友。聚光灯已经为你点亮，舞台中央等待你的绽放。欢迎每一位心怀舞蹈梦的你加入我们，让我们一起用汗水诠释热爱，舞动青春！\\r\\n\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 17:24:03', 8),
+(94, '校园墙', 1, 'com.ruoyi.campusai.controller.NoticeController.addSave()', 'POST', 1, 'user', '研发部门', '/campusai/notice/add', '127.0.0.1', '内网IP', '{\"title\":[\"炫锋篮球社团\"],\"content\":[\"炫锋篮球社团是汇聚了校内最多篮球狂热分子的大家庭。我们的核心是“无篮球，不兄弟”，旨在为每一位成员提供挥洒汗水、享受竞技快乐的家园。社团活动精彩纷呈，包括日常的定点投篮、体能训练、技巧教学，以及激动人心的3v3“斗牛”赛、5v5全场对抗赛和趣味投篮大赛。我们不仅关注个人技术的提升，更注重团队默契的培养。在这里，每一次助攻、每一次防守都充满了激情与呐喊。无论你的水平如何，只要你对篮球有一颗热爱的心，炫锋篮球社都热烈欢迎你的加入，让我们一起创造更多热血的瞬间！\\r\\n\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 17:28:46', 10),
+(95, '代码生成', 6, 'com.ruoyi.generator.controller.GenController.importTableSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/importTable', '127.0.0.1', '内网IP', '{\"tables\":[\"club_reservation\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 17:58:23', 115),
+(96, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"23\"],\"tableName\":[\"club_reservation\"],\"tableComment\":[\"社团报名\"],\"className\":[\"ClubReservation\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"120\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"\"],\"columns[0].javaType\":[\"Long\"],\"columns[0].javaField\":[\"id\"],\"columns[0].isInsert\":[\"1\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"121\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"预约社团\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"club\"],\"columns[1].isInsert\":[\"1\"],\"columns[1].isEdit\":[\"1\"],\"columns[1].isList\":[\"1\"],\"columns[1].isQuery\":[\"1\"],\"columns[1].queryType\":[\"LIKE\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"122\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"学生姓名\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"name\"],\"columns[2].isInsert\":[\"1\"],\"columns[2].isEdit\":[\"1\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"LIKE\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"input\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"123\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"联系方式\"],\"columns[3].javaType\":[\"String\"],\"columns[3].javaField\":[\"phone\"],\"columns[3].isInsert\":[\"1\"],\"columns[3].isEdit\":[\"1\"],\"columns[3].isList\":[\"1\"],\"columns[3].isQuery\":[\"1\"],\"columns[3].queryType\":[\"LIKE\"],\"columns[3].isRequired\":[\"1\"],\"columns[3].htmlType\":[\"input\"],\"columns[3].dictType\":[\"\"],\"columns[4].columnId\":[\"124\"],\"columns[4].sort\":[\"5\"],\"columns[4].columnComment\":[\"专业\"],\"columns[4].javaType\":[\"String\"],\"columns[4].javaField\":[\"major\"],\"columns[4].isInsert\":[\"1\"],\"columns[4].isEdit\":[\"1\"],\"columns[4].isList\":[\"1\"],\"columns[4].isQuery\":[\"1\"],\"columns[4].queryType\":[\"LIKE\"],\"columns[4].htmlType\":[\"input\"],\"columns[4].dictType\":[\"\"],\"columns[5].columnId\":[\"125\"],\"columns[5].sort\":[\"6\"],\"columns[5].columnComment\":[\"备注\"', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-17 17:59:05', 31),
+(97, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.download()', 'GET', 1, 'admin', '研发部门', '/tool/gen/download/club_reservation', '127.0.0.1', '内网IP', '\"club_reservation\"', NULL, 0, NULL, '2025-09-17 17:59:18', 33),
+(98, '代码生成', 3, 'com.ruoyi.generator.controller.GenController.remove()', 'POST', 1, 'admin', '研发部门', '/tool/gen/remove', '127.0.0.1', '内网IP', '{\"ids\":[\"23\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-18 09:27:32', 99),
+(99, '代码生成', 6, 'com.ruoyi.generator.controller.GenController.importTableSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/importTable', '127.0.0.1', '内网IP', '{\"tables\":[\"club_reservation\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-18 09:27:39', 1521),
+(100, '代码生成', 2, 'com.ruoyi.generator.controller.GenController.editSave()', 'POST', 1, 'admin', '研发部门', '/tool/gen/edit', '127.0.0.1', '内网IP', '{\"tableId\":[\"24\"],\"tableName\":[\"club_reservation\"],\"tableComment\":[\"社团报名\"],\"className\":[\"ClubReservation\"],\"functionAuthor\":[\"Shawn\"],\"remark\":[\"\"],\"columns[0].columnId\":[\"127\"],\"columns[0].sort\":[\"1\"],\"columns[0].columnComment\":[\"\"],\"columns[0].javaType\":[\"Long\"],\"columns[0].javaField\":[\"id\"],\"columns[0].isInsert\":[\"1\"],\"columns[0].queryType\":[\"EQ\"],\"columns[0].htmlType\":[\"input\"],\"columns[0].dictType\":[\"\"],\"columns[1].columnId\":[\"128\"],\"columns[1].sort\":[\"2\"],\"columns[1].columnComment\":[\"预约社团\"],\"columns[1].javaType\":[\"String\"],\"columns[1].javaField\":[\"club\"],\"columns[1].isInsert\":[\"1\"],\"columns[1].isEdit\":[\"1\"],\"columns[1].isList\":[\"1\"],\"columns[1].isQuery\":[\"1\"],\"columns[1].queryType\":[\"LIKE\"],\"columns[1].isRequired\":[\"1\"],\"columns[1].htmlType\":[\"input\"],\"columns[1].dictType\":[\"\"],\"columns[2].columnId\":[\"129\"],\"columns[2].sort\":[\"3\"],\"columns[2].columnComment\":[\"学生姓名\"],\"columns[2].javaType\":[\"String\"],\"columns[2].javaField\":[\"name\"],\"columns[2].isInsert\":[\"1\"],\"columns[2].isEdit\":[\"1\"],\"columns[2].isList\":[\"1\"],\"columns[2].isQuery\":[\"1\"],\"columns[2].queryType\":[\"LIKE\"],\"columns[2].isRequired\":[\"1\"],\"columns[2].htmlType\":[\"input\"],\"columns[2].dictType\":[\"\"],\"columns[3].columnId\":[\"130\"],\"columns[3].sort\":[\"4\"],\"columns[3].columnComment\":[\"联系方式\"],\"columns[3].javaType\":[\"String\"],\"columns[3].javaField\":[\"phone\"],\"columns[3].isInsert\":[\"1\"],\"columns[3].isEdit\":[\"1\"],\"columns[3].isList\":[\"1\"],\"columns[3].isQuery\":[\"1\"],\"columns[3].queryType\":[\"LIKE\"],\"columns[3].isRequired\":[\"1\"],\"columns[3].htmlType\":[\"input\"],\"columns[3].dictType\":[\"\"],\"columns[4].columnId\":[\"131\"],\"columns[4].sort\":[\"5\"],\"columns[4].columnComment\":[\"专业\"],\"columns[4].javaType\":[\"String\"],\"columns[4].javaField\":[\"major\"],\"columns[4].isInsert\":[\"1\"],\"columns[4].isEdit\":[\"1\"],\"columns[4].isList\":[\"1\"],\"columns[4].isQuery\":[\"1\"],\"columns[4].queryType\":[\"LIKE\"],\"columns[4].htmlType\":[\"input\"],\"columns[4].dictType\":[\"\"],\"columns[5].columnId\":[\"132\"],\"columns[5].sort\":[\"6\"],\"columns[5].columnComment\":[\"备注\"', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-18 09:28:28', 61);
+INSERT INTO `sys_oper_log` (`oper_id`, `title`, `business_type`, `method`, `request_method`, `operator_type`, `oper_name`, `dept_name`, `oper_url`, `oper_ip`, `oper_location`, `oper_param`, `json_result`, `status`, `error_msg`, `oper_time`, `cost_time`) VALUES
+(101, '代码生成', 8, 'com.ruoyi.generator.controller.GenController.download()', 'GET', 1, 'admin', '研发部门', '/tool/gen/download/club_reservation', '127.0.0.1', '内网IP', '\"club_reservation\"', NULL, 0, NULL, '2025-09-18 09:28:35', 530),
+(102, '角色管理', 2, 'com.ruoyi.web.controller.system.SysRoleController.editSave()', 'POST', 1, 'admin', '研发部门', '/system/role/edit', '127.0.0.1', '内网IP', '{\"roleId\":[\"100\"],\"roleName\":[\"活动运营\"],\"roleKey\":[\"yunying\"],\"roleSort\":[\"3\"],\"status\":[\"0\"],\"remark\":[\"\"],\"menuIds\":[\"2038,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2069,2070,2071,2072,2073,2074,2075,2076,2077,2078,2079,2080,2081,2082,2083,2084,2085,2086,1,107,1035,1036,1037,1038,108,500,1039,1040,1041,1042,501,1043,1044,1045,1046,2,111,112,113\"]}', '{\"msg\":\"操作成功\",\"code\":0}', 0, NULL, '2025-09-18 09:40:43', 150);
 
 INSERT INTO `sys_post` (`post_id`, `post_code`, `post_name`, `post_sort`, `status`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
 (1, 'ceo', 'CEO', 1, '0', 'admin', '2023-12-27 12:02:42', '', NULL, '');
@@ -1035,7 +1024,7 @@ INSERT INTO `sys_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_s
 INSERT INTO `sys_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_scope`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
 (2, '普通角色', 'common', 2, '5', '0', '0', 'admin', '2023-12-27 12:02:42', 'admin', '2023-12-28 12:05:22', '普通角色');
 INSERT INTO `sys_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_scope`, `status`, `del_flag`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
-(100, '活动运营', 'yunying', 3, '1', '0', '0', 'admin', '2024-01-02 09:50:08', 'admin', '2025-09-17 14:33:57', '');
+(100, '活动运营', 'yunying', 3, '1', '0', '0', 'admin', '2024-01-02 09:50:08', 'admin', '2025-09-18 09:40:43', '');
 
 
 
@@ -1173,17 +1162,21 @@ INSERT INTO `sys_role_menu` (`role_id`, `menu_id`) VALUES
 (100, 2077),
 (100, 2078),
 (100, 2079),
-(100, 2080);
+(100, 2080),
+(100, 2081),
+(100, 2082),
+(100, 2083),
+(100, 2084),
+(100, 2085),
+(100, 2086);
 
 INSERT INTO `sys_user` (`user_id`, `dept_id`, `login_name`, `user_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `salt`, `status`, `del_flag`, `login_ip`, `login_date`, `pwd_update_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
-(1, 103, 'admin', '超级管理员', '00', 'ry@163.com', '15888888888', '1', '/profile/avatar/2023/12/27/blob_20231227121211A002.png', 'cd5c653aad9c947add80dd5b74dec949', '56f88c', '0', '0', '127.0.0.1', '2025-09-17 15:47:30', '2024-01-02 09:47:00', 'admin', '2023-12-27 12:02:41', '', '2025-09-17 15:47:28', '管理员');
+(1, 103, 'admin', '超级管理员', '00', 'ry@163.com', '15888888888', '1', '/profile/avatar/2023/12/27/blob_20231227121211A002.png', 'cd5c653aad9c947add80dd5b74dec949', '56f88c', '0', '0', '127.0.0.1', '2025-09-18 09:40:35', '2024-01-02 09:47:00', 'admin', '2023-12-27 12:02:41', '', '2025-09-18 09:40:30', '管理员');
 INSERT INTO `sys_user` (`user_id`, `dept_id`, `login_name`, `user_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `salt`, `status`, `del_flag`, `login_ip`, `login_date`, `pwd_update_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
 (2, 105, 'ry', '测试用户', '00', 'ry@qq.com', '15666666666', '1', '', '13df7e5e78d714ca0e27b7640981eb4f', '722576', '0', '0', '127.0.0.1', '2023-12-27 12:02:42', '2023-12-27 12:02:42', 'admin', '2023-12-27 12:02:42', '', '2023-12-28 12:02:06', '测试员');
 INSERT INTO `sys_user` (`user_id`, `dept_id`, `login_name`, `user_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `salt`, `status`, `del_flag`, `login_ip`, `login_date`, `pwd_update_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
-(100, 103, 'user', 'user', '00', '', '', '0', '', 'e4c40195f1543bbbd722ef47540ca7c4', 'c548a7', '0', '0', '127.0.0.1', '2025-09-17 16:27:29', NULL, 'admin', '2024-01-02 09:48:04', 'admin', '2025-09-17 16:27:27', '');
+(100, 103, 'user', 'user', '00', '', '', '0', '', 'e4c40195f1543bbbd722ef47540ca7c4', 'c548a7', '0', '0', '127.0.0.1', '2025-09-18 11:01:40', NULL, 'admin', '2024-01-02 09:48:04', 'admin', '2025-09-18 11:01:36', '');
 
-INSERT INTO `sys_user_online` (`sessionId`, `login_name`, `dept_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `start_timestamp`, `last_access_time`, `expire_time`) VALUES
-('341af299-e312-4390-bff1-a7045b9845ec', 'user', '研发部门', '127.0.0.1', '内网IP', 'Chrome 14', 'Windows 10', 'on_line', '2025-09-17 15:47:27', '2025-09-17 17:08:02', 1800000);
 
 
 INSERT INTO `sys_user_post` (`user_id`, `post_id`) VALUES
