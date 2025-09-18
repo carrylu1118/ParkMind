@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 社团报名对象 club_reservation
  * 
  * @author Shawn
- * @date 2025-09-17
+ * @date 2025-09-18
  */
 public class ClubReservation extends BaseEntity
 {

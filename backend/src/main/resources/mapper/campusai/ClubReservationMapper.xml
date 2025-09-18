@@ -11,11 +11,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="phone"    column="phone"    />
         <result property="major"    column="major"    />
         <result property="remark"    column="remark"    />
-        <result property="userId"    column="userId"    />
+        <result property="userId"    column="user_id"    />
     </resultMap>
 
     <sql id="selectClubReservationVo">
-        select id, club, name, phone, major, remark, userId from club_reservation
+        select id, club, name, phone, major, remark, user_id from club_reservation
     </sql>
 
     <select id="selectClubReservationList" parameterType="ClubReservation" resultMap="ClubReservationResult">
@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
             <if test="major != null  and major != ''"> and major like concat('%', #{major}, '%')</if>
-            <if test="userId != null  and userId != ''"> and userId = #{userId}</if>
+            <if test="userId != null  and userId != ''"> and user_id like concat('%', #{userId}, '%')</if>
         </where>
     </select>
     
@@ -42,7 +42,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null and phone != ''">phone,</if>
             <if test="major != null">major,</if>
             <if test="remark != null">remark,</if>
-            <if test="userId != null">userId,</if>
+            <if test="userId != null">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="club != null and club != ''">#{club},</if>
@@ -62,7 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="phone != null and phone != ''">phone = #{phone},</if>
             <if test="major != null">major = #{major},</if>
             <if test="remark != null">remark = #{remark},</if>
-            <if test="userId != null">userId = #{userId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
         </trim>
         where id = #{id}
     </update>

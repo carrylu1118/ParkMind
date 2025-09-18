@@ -12,7 +12,7 @@ import com.ruoyi.common.core.text.Convert;
  * 社团报名Service业务层处理
  * 
  * @author Shawn
- * @date 2025-09-17
+ * @date 2025-09-18
  */
 @Service
 public class ClubReservationServiceImpl implements IClubReservationService 

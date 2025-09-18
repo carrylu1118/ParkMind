@@ -7,7 +7,7 @@ import com.ruoyi.campusai.domain.ClubReservation;
  * 社团报名Service接口
  * 
  * @author Shawn
- * @date 2025-09-17
+ * @date 2025-09-18
  */
 public interface IClubReservationService 
 {

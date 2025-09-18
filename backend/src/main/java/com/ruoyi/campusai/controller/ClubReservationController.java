@@ -23,7 +23,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 社团报名Controller
  * 
  * @author Shawn
- * @date 2025-09-17
+ * @date 2025-09-18
  */
 @Controller
 @RequestMapping("/campusai/reservation")
