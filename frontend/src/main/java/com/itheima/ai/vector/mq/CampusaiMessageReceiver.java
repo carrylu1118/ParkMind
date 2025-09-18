@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-@RabbitListener(queues = {"CAMPUSAI_NOTICE","CAMPUSAI_MATERIALS"})
+@RabbitListener(queuesToDeclare = {
+        @Queue("CAMPUSAI_NOTICE"),
+        @Queue("CAMPUSAI_MATERIALS")})
 public class CampusaiMessageReceiver {
     private final static Logger logger = LoggerFactory.getLogger(CampusaiMessageReceiver.class);
 

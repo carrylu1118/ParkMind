@@ -1,221 +1,758 @@
 <template>
-  <div class="home" :class="{ 'dark': isDark }">
-    <div class="container">
-      <h1 class="title">黑马 AI 应用中心</h1>
-      <div class="cards-grid">
-        <router-link
-            v-for="app in aiApps"
-            :key="app.id"
-            :to="app.route"
-            class="card"
-        >
-          <div class="card-content">
-            <component :is="app.icon" class="icon" />
-            <h2>{{ app.title }}</h2>
-            <p>{{ app.description }}</p>
+  <div class="customer-service" :class="{ 'dark': isDark }">
+    <div class="chat-container">
+      <div class="sidebar">
+        <div class="history-header">
+          <h2>咨询记录</h2>
+          <button class="new-chat" @click="startNewChat">
+            <PlusIcon class="icon" />
+            新咨询
+          </button>
+        </div>
+        <div class="history-list">
+          <div
+              v-for="chat in chatHistory"
+              :key="chat.id"
+              class="history-item"
+              :class="{ 'active': currentChatId === chat.id }"
+              @click="loadChat(chat)"
+          >
+            <ChatBubbleLeftRightIcon class="icon" />
+            <span class="title">{{ chat.title || '新咨询' }}</span>
+            <button class="delete-btn" @click.stop="confirmDelete(chat)">删除</button>
           </div>
-        </router-link>
+        </div>
+      </div>
+
+      <div class="chat-main">
+        <div class="service-header">
+          <div class="service-info">
+            <ComputerDesktopIcon class="avatar" />
+            <div class="info">
+              <h3>{{currentChat.title}}</h3>
+              <p>做最懂你的校园助手</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="messages" ref="messagesRef">
+          <ChatMessage
+              v-for="(message, index) in currentMessages"
+              :key="index"
+              :message="message"
+              :is-stream="isStreaming && index === currentMessages.length - 1"
+          />
+        </div>
+
+        <div class="input-area">
+          <textarea
+              v-model="userInput"
+              @keydown.enter.prevent="sendMessage()"
+              placeholder="请输入您的问题..."
+              rows="1"
+              ref="inputRef"
+          ></textarea>
+          <button
+              class="send-button"
+              @click="sendMessage()"
+              :disabled="isStreaming || !userInput.trim()"
+          >
+            <PaperAirplaneIcon class="icon" />
+          </button>
+        </div>
       </div>
     </div>
+
+    <!-- 预约成功弹窗 -->
+    <div v-if="showBookingModal" class="booking-modal">
+      <div class="modal-content">
+        <h3>预约成功！</h3>
+        <div class="booking-info" v-html="bookingInfo"></div>
+        <button @click="showBookingModal = false">确定</button>
+      </div>
+    </div>
+
+    <!-- 确认删除对话框 -->
+    <div class="confirm-dialog" v-if="showConfirmDialog">
+      <div class="confirm-box">
+        <h3 class="confirm-title">确认删除</h3>
+        <p class="confirm-message">确定要删除 "{{ chatToDelete?.title || '未命名对话' }}" 吗？此操作不可恢复。</p>
+        <div class="confirm-buttons">
+          <button class="confirm-btn cancel" @click="showConfirmDialog = false">取消</button>
+          <button class="confirm-btn delete" @click="deleteChat">确认删除</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useDark } from '@vueuse/core'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import {
   ChatBubbleLeftRightIcon,
-  HeartIcon,
-  UserGroupIcon,
-  DocumentTextIcon
+  PaperAirplaneIcon,
+  PlusIcon,
+  ComputerDesktopIcon
 } from '@heroicons/vue/24/outline'
+import ChatMessage from '../components/ChatMessage.vue'
+import { chatAPI } from '../services/api'
 
 const isDark = useDark()
+const messagesRef = ref(null)
+const inputRef = ref(null)
+const userInput = ref('')
+const isStreaming = ref(false)
+const currentChatId = ref(null)
+const currentMessages = ref([])
+const chatHistory = ref([])
+const showBookingModal = ref(false)
+const bookingInfo = ref('')
+const showConfirmDialog = ref(false);
+const chatToDelete = ref(null);
+// const chatTitle = ref('小智');
+const currentChat = ref({title:'匿名'})
+// const currentChatId = ref(1);
+// 配置 marked
+marked.setOptions({
+  breaks: true,  // 支持换行
+  gfm: true,     // 支持 GitHub Flavored Markdown
+  sanitize: false // 允许 HTML
+})
 
-const aiApps = ref([
-  {
-    id: 1,
-    title: 'AI 聊天',
-    description: '多模态对话机器人，支持图片、音频等',
-    route: '/ai-chat',
-    icon: ChatBubbleLeftRightIcon
-  },
-  {
-    id: 2,
-    title: '哄哄模拟器',
-    description: '一个帮助你练习哄女朋友开心的小游戏',
-    route: '/game',
-    icon: HeartIcon,
-    iconClass: 'heart-icon'
-  },
-  {
-    id: 3,
-    title: '黑马智能客服',
-    description: '24小时在线的智能课程咨询师',
-    route: '/customer-service',
-    icon: UserGroupIcon
-  },
-  {
-    id: 4,
-    title: 'ChatPDF',
-    description: '打造你的个人知识库，与知识库自由对话',
-    route: '/chat-pdf',
-    icon: DocumentTextIcon
+// 自动调整输入框高度
+const adjustTextareaHeight = () => {
+  const textarea = inputRef.value
+  if (textarea) {
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
   }
-])
+}
+
+// 滚动到底部
+const scrollToBottom = async () => {
+  await nextTick()
+  if (messagesRef.value) {
+    messagesRef.value.scrollTop = messagesRef.value.scrollHeight
+  }
+}
+
+// 发送消息
+const sendMessage = async (content) => {
+  if (isStreaming.value || (!content && !userInput.value.trim())) return
+
+  // 使用传入的 content 或用户输入框的内容
+  const messageContent = content || userInput.value.trim()
+
+  // 添加用户消息
+  const userMessage = {
+    role: 'user',
+    content: messageContent,
+    timestamp: new Date()
+  }
+  currentMessages.value.push(userMessage)
+
+  // 清空输入
+  if (!content) {  // 只有在非传入内容时才清空输入框
+    userInput.value = ''
+    adjustTextareaHeight()
+  }
+  await scrollToBottom()
+
+  // 添加助手消息占位
+  const assistantMessage = {
+    role: 'assistant',
+    content: '',
+    timestamp: new Date(),
+    isMarkdown: true  // 添加标记表示这是 Markdown 内容
+  }
+  currentMessages.value.push(assistantMessage)
+  isStreaming.value = true
+
+  let accumulatedContent = ''
+
+  try {
+    const reader = await chatAPI.sendServiceMessage(messageContent, currentChatId.value)
+    const decoder = new TextDecoder('utf-8')
+
+    while (true) {
+      try {
+        const { value, done } = await reader.read()
+        if (done) break
+        let responseText = decoder.decode(value)
+        console.log('responseText:', responseText)
+
+        if(responseText.startsWith('HAS_INFO:')){
+          //更新当前聊天的标题
+          // loadChatHistory()
+          currentChat.value.title = responseText.split('HAS_INFO:')[1]
+          chatHistory[0].value = currentChat
+        }else{
+          // 累积新内容
+          accumulatedContent += responseText
+        }
+
+        await nextTick(() => {
+          // 更新消息
+          const updatedMessage = {
+            ...assistantMessage,
+            content: accumulatedContent,
+            isMarkdown: true  // 保持 Markdown 标记
+          }
+          const lastIndex = currentMessages.value.length - 1
+          currentMessages.value.splice(lastIndex, 1, updatedMessage)
+        })
+        await scrollToBottom()
+      } catch (readError) {
+        console.error('读取流错误:', readError)
+        break
+      }
+    }
+
+    // 检查是否包含预约信息
+    if (accumulatedContent.includes('预约编号')) {
+      const bookingMatch = accumulatedContent.match(/【(.*?)】/s)
+      if (bookingMatch) {
+        // 使用 marked 处理预约信息中的 Markdown
+        bookingInfo.value = DOMPurify.sanitize(
+            marked.parse(bookingMatch[1]),
+            {
+              ADD_TAGS: ['code', 'pre', 'span'],
+              ADD_ATTR: ['class', 'language']
+            }
+        )
+        showBookingModal.value = true
+      }
+    }
+  } catch (error) {
+    console.error('发送消息失败:', error)
+    assistantMessage.content = '抱歉，发生了错误，请稍后重试。'
+  } finally {
+    isStreaming.value = false
+    await scrollToBottom()
+  }
+}
+
+
+// 加载特定对话
+const loadChat = async (chat) => {
+  currentChatId.value = chat.id
+  currentChat.value = chat
+  // chatTitle.value = chat.title
+  try {
+    const messages = await chatAPI.getChatMessages(chat.id, 'service')
+    currentMessages.value = messages.map(msg => ({
+      ...msg,
+      isMarkdown: msg.role === 'assistant'  // 为助手消息添加 Markdown 标记
+    }))
+  } catch (error) {
+    console.error('加载对话消息失败:', error)
+    currentMessages.value = []
+  }
+}
+
+// 加载聊天历史
+const loadChatHistory = async () => {
+  try {
+    const history = await chatAPI.getChatHistory('service')
+    console.log('聊天历史:', history)
+    chatHistory.value = history || []
+    console.log('聊天历史2:', chatHistory)
+    if (history && history.length > 0) {
+      await loadChat(history[0])
+    } else {
+      // await startNewChat()  // 等待 startNewChat 完成
+    }
+  } catch (error) {
+    console.error('加载聊天历史失败:', error)
+    chatHistory.value = []
+    await startNewChat()  // 等待 startNewChat 完成
+  }
+}
+
+const confirmDelete = (chat) => {
+  // 阻止事件冒泡，避免触发loadChat
+  event.stopPropagation();
+  chatToDelete.value = chat;
+  showConfirmDialog.value = true;
+};
+
+const deleteChat = () => {
+  if (chatToDelete.value) {
+    const index = chatHistory.value.findIndex(chat => chat.id === chatToDelete.value.id);
+    if (index !== -1) {
+      chatHistory.value.splice(index, 1);
+
+      // 如果删除的是当前选中的聊天，清空当前聊天
+      if (currentChatId.value === chatToDelete.value.id) {
+        currentChatId.value = null;
+        // currentChat.value = null;
+        // startNewChat();
+        // loadChat(chatHistory[0])
+      }
+      chatAPI.deleteChat(chatToDelete.value.id, 'service')
+    }
+
+  }
+
+  showConfirmDialog.value = false;
+  chatToDelete.value = null;
+};
+
+// 开始新对话
+const startNewChat = async () => {  // 添加 async
+  const newChatId = Date.now().toString()
+  currentChatId.value = newChatId
+  currentMessages.value = []
+  // chatTitle.value = '小智'
+  // 添加新对话到历史列表
+  const newChat = {
+    id: newChatId,
+    title: `咨询 ${newChatId.slice(-6)}`,
+    type: 'service'
+  }
+  await chatAPI.createNewChat(newChat)
+  chatHistory.value = [newChat, ...chatHistory.value]
+  currentChat.value = newChat
+  // 发送初始问候语
+  await sendMessage('你好')
+}
+
+onMounted(() => {
+  loadChatHistory()
+  adjustTextareaHeight()
+})
 </script>
 
 <style scoped lang="scss">
-.home {
-  min-height: 100vh;
-  padding: 2rem;
+.customer-service {
+  position: fixed;
+  top: 64px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
   background: var(--bg-color);
-  transition: background-color 0.3s;
+  overflow: hidden;
 
-  .container {
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  .title {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
-    background: linear-gradient(45deg, #007CF0, #00DFD8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: fadeIn 1s ease-out;
-  }
-
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 2rem;
-    justify-items: center;
-    padding: 1rem;
-
-    @media (min-width: 768px) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    @media (min-width: 1200px) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .card {
-    position: relative;
+  .chat-container {
+    flex: 1;
+    display: flex;
+    max-width: 1800px;
     width: 100%;
-    max-width: 320px;
-    background: rgba(255, 255, 255, 0.8);
+    margin: 0 auto;
+    padding: 1.5rem 2rem;
+    gap: 1.5rem;
+    height: 100%;
+    overflow: hidden;
+  }
+  .delete-btn {
+    background: #ff4757;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    margin-left: 10px;
+    flex-shrink: 0;
+  }
+  .history-item:hover .delete-btn {
+    opacity: 1;
+  }
+  .delete-btn:hover {
+    background: #ff2e43;
+    transform: scale(1.05);
+  }
+  .delete-btn:active {
+    transform: scale(0.95);
+  }
+  .confirm-dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .confirm-box {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+  .confirm-title {
+    font-size: 20px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+  }
+  .confirm-message {
+    color: #7f8c8d;
+    margin-bottom: 20px;
+  }
+  .confirm-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+  }
+  .confirm-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  .confirm-btn.cancel {
+    background: #bdc3c7;
+    color: #2c3e50;
+  }
+  .confirm-btn.delete {
+    background: #ff4757;
+    color: white;
+  }
+  .confirm-btn.cancel:hover {
+    background: #a4b0be;
+  }
+  .confirm-btn.delete:hover {
+    background: #ff2e43;
+  }
+  .sidebar {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
-    border-radius: 20px;
-    padding: 2rem;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+
+    .history-header {
+      flex-shrink: 0;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      h2 {
+        font-size: 1.25rem;
+      }
+
+      .new-chat {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        background: #333;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background: #000;
+        }
+
+        .icon {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 1rem 1rem;
+
+      .history-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.05);
+        }
+
+        &.active {
+          background: rgba(0, 0, 0, 0.1);
+        }
+
+        .icon {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+
+        .title {
+          flex: 1;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  .chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
     overflow: hidden;
 
-    .dark & {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
+    .service-header {
+      flex-shrink: 0;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      background: rgba(255, 255, 255, 0.98);
 
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      .service-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
 
-      .dark & {
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        .avatar {
+          width: 48px;
+          height: 48px;
+          color: #333;
+          padding: 6px;
+          background: #f0f0f0;
+          border-radius: 12px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background: #e0e0e0;
+            transform: scale(1.05);
+          }
+        }
+
+        .info {
+          h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.25rem;
+          }
+
+          p {
+            font-size: 0.875rem;
+            color: #666;
+          }
+        }
       }
     }
 
-    .card-content {
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 2rem;
+    }
+
+    .input-area {
+      flex-shrink: 0;
+      padding: 1.5rem 2rem;
+      background: rgba(255, 255, 255, 0.98);
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
       display: flex;
-      flex-direction: column;
-      align-items: center;
+      gap: 1rem;
+      align-items: flex-end;
+
+      textarea {
+        flex: 1;
+        resize: none;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1rem;
+        color: inherit;
+        font-family: inherit;
+        font-size: 1rem;
+        line-height: 1.5;
+        max-height: 150px;
+
+        &:focus {
+          outline: none;
+          border-color: #333;
+          box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+      }
+
+      .send-button {
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover:not(:disabled) {
+          background: #000;
+        }
+
+        &:disabled {
+          background: #ccc;
+          cursor: not-allowed;
+        }
+
+        .icon {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+    }
+  }
+
+  .booking-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      max-width: 500px;
+      width: 90%;
       text-align: center;
-    }
 
-    .icon {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 1rem;
-      color: #007CF0;
-
-      &.heart-icon {
-        color: #ff4d4f;
-        animation: pulse 1.5s ease-in-out infinite;
+      h3 {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #333;
       }
-    }
 
-    h2 {
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    p {
-      color: #666;
-      font-size: 1rem;
-
-      .dark & {
-        color: #999;
+      .booking-info {
+        margin: 1.5rem 0;
+        text-align: left;
+        line-height: 1.6;
+        color: #666;
       }
-    }
-  }
 
-  &.dark {
-    background: #1a1a1a;
+      button {
+        padding: 0.75rem 2rem;
+        background: #333;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.3s;
 
-    .card {
-      background: rgba(255, 255, 255, 0.05);
-
-      p {
-        color: #999;
+        &:hover {
+          background: #000;
+        }
       }
     }
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
+.dark {
+  .sidebar {
+    background: rgba(40, 40, 40, 0.95);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes pulse {
-  0% {
-    transform: scale(1);
+  .chat-main {
+    background: rgba(40, 40, 40, 0.95);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+    .service-header {
+      background: rgba(30, 30, 30, 0.98);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+      .service-info {
+        .avatar {
+          color: #fff;
+          background: #444;
+
+          &:hover {
+            background: #555;
+          }
+        }
+
+        .info p {
+          color: #999;
+        }
+      }
+    }
+
+    .input-area {
+      background: rgba(30, 30, 30, 0.98);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+      textarea {
+        background: rgba(50, 50, 50, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: white;
+
+        &:focus {
+          border-color: #666;
+          box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+      }
+    }
   }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
+
+  .booking-modal .modal-content {
+    background: #333;
+
+    h3 {
+      color: #fff;
+    }
+
+    .booking-info {
+      color: #ccc;
+    }
+
+    button {
+      background: #666;
+
+      &:hover {
+        background: #888;
+      }
+    }
   }
 }
 
 @media (max-width: 768px) {
-  .home {
-    padding: 1rem;
-
-    .container {
-      padding: 0 1rem;
+  .customer-service {
+    .chat-container {
+      padding: 0;
     }
 
-    .title {
-      font-size: 2rem;
+    .sidebar {
+      display: none;
     }
 
-    .card {
-      max-width: 100%;
+    .chat-main {
+      border-radius: 0;
     }
   }
 }
