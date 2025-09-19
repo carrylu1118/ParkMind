@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `spring-ai-demo`;
+CREATE DATABASE IF NOT EXISTS `campusai`;
 
 CREATE TABLE IF NOT EXISTS SPRING_AI_CHAT_MEMORY (
     `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS SPRING_AI_CHAT_MEMORY (
 );
 
 
-CREATE TABLE `spring_ai_chat_record` (
+CREATE TABLE IF NOT EXISTS `spring_ai_chat_record` (
      `id` VARCHAR(50) NOT NULL DEFAULT '' COMMENT '会话id' COLLATE 'utf8mb4_general_ci',
      `title` VARCHAR(150) NULL DEFAULT '' COLLATE 'utf8mb4_general_ci',
      `user_id` BIGINT UNSIGNED NOT NULL COMMENT '用户id',
