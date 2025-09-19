@@ -27,25 +27,13 @@ import redis.clients.jedis.JedisPooled;
 @Configuration
 public class SpringAIConfiguration {
 
-
+    //TODO 多任务共用：ChatClient配置
     @Bean
     public ChatClient serviceChatClient(OpenAiChatModel model, ChatMemory chatMemory,
                                         VectorStore vectorStore,
                                         ClubTools clubTools, RecordTools recodTools
                                         ){
         return ChatClient.builder(model)
-                .defaultAdvisors(
-//                        SimpleLoggerAdvisor.builder().build(),
-                        MessageChatMemoryAdvisor.builder(chatMemory).build(),
-                        QuestionAnswerAdvisor.builder(vectorStore)
-                                .searchRequest(
-                                        SearchRequest.builder() // 向量检索的请求参数
-                                                .similarityThreshold(0.5d) // 相似度阈值
-                                                .topK(1) // 返回的文档片段数量
-                                                .build()
-                                ).build()
-                )
-                .defaultTools(clubTools,recodTools)
                 .defaultSystem(SystemConstants.SERVICE_SYSTEM_PROMPT)
                 .build();
     }
