@@ -34,11 +34,23 @@ public class SpringAIConfiguration {
                                         ClubTools clubTools, RecordTools recodTools
                                         ){
         return ChatClient.builder(model)
+                .defaultAdvisors(
+//                        SimpleLoggerAdvisor.builder().build(),
+                        MessageChatMemoryAdvisor.builder(chatMemory).build(), //TODO 任务2.2.2：理解此处配置
+                        QuestionAnswerAdvisor.builder(vectorStore)
+                                .searchRequest(
+                                        SearchRequest.builder() // 向量检索的请求参数
+                                                .similarityThreshold(0.5d) // 相似度阈值
+                                                .topK(1) // 返回的文档片段数量
+                                                .build()
+                                ).build()
+                )
+                .defaultTools(clubTools,recodTools)
                 .defaultSystem(SystemConstants.SERVICE_SYSTEM_PROMPT)
                 .build();
     }
 
-    // TODO 任务2.2：配置基于Mysql的聊天记忆组件
+    // TODO 任务2.2.2：完成此处配置，基于Mysql的聊天记忆组件
     @Bean
     public ChatMemory chatMemory(JdbcChatMemoryRepository chatMemoryRepository) {
         return null;

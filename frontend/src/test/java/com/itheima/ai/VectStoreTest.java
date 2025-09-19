@@ -53,7 +53,6 @@ public class VectStoreTest {
 
     @Test
     public void test3ds() {
-        //TODO metadata删除失败！
         Filter.Expression filterExpression = new Filter.Expression(
                 Filter.ExpressionType.EQ,
                 new Filter.Key("title"),

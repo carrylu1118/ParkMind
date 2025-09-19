@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/ai/history")
 @RequiredArgsConstructor
-//TODO 任务2.2：完成聊天记录Api接口开发
+//TODO 任务2.2.2：完成聊天记录Api接口开发
 public class ChatHistoryController {
 
     private final ChatMemoryRepository chatMemoryRepository;

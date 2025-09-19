@@ -37,7 +37,6 @@ public class ClubTools {
 
         clubReservationService.saveOrUpdate(clubReservation);
         log.info("学员预约社团登记：{}", clubReservation);
-        //TODO
         return clubReservation.getId();
     }
 }
