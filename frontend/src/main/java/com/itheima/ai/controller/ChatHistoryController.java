@@ -15,31 +15,31 @@ import java.util.List;
 @RestController
 @RequestMapping("/ai/history")
 @RequiredArgsConstructor
+//TODO 任务2.2：完成聊天记录Api接口开发
 public class ChatHistoryController {
 
     private final ChatMemoryRepository chatMemoryRepository;
     private final ISpringAiChatRecordService recordService;
 
+    //新建会话记录
     @RequestMapping("/create")
     public void create(@RequestBody SpringAiChatRecord record) {
-        recordService.save(record);
     }
+    //获取会话记录列表
     @RequestMapping("/list")
     public List<SpringAiChatRecord> list() {
-        LambdaQueryWrapper<SpringAiChatRecord> wrapper = new LambdaQueryWrapper<>();
-        wrapper.orderByDesc(SpringAiChatRecord::getCreateTime);
-        return recordService.list(wrapper);
+        return null;
     }
 
+    //获取某个会话的聊天记录
     @GetMapping("/info/{chatId}")
     public List<MessageVO> getChatHistory(@PathVariable("chatId") String chatId) {
-        return chatMemoryRepository.findByConversationId(chatId).stream().map(MessageVO::new).toList();
+        return null;
     }
 
+    //删除某个会话
     @GetMapping("/delete/{chatId}")
     public Result deleteChatHistory(@PathVariable("chatId") String chatId) {
-        recordService.removeById(chatId);
-        chatMemoryRepository.deleteByConversationId(chatId);
         return Result.ok();
     }
 

@@ -38,15 +38,14 @@ public class SpringAIConfiguration {
                 .build();
     }
 
+    // TODO 任务2.2：配置基于Mysql的聊天记忆组件
     @Bean
     public ChatMemory chatMemory(JdbcChatMemoryRepository chatMemoryRepository) {
-        return MessageWindowChatMemory.builder()
-                .chatMemoryRepository(chatMemoryRepository)
-                .maxMessages(20)
-                .build();
+        return null;
     }
 
 
+    //基于内存的聊天记录，供参考，版本：1.0.0
     @Bean
     public ChatMemory inMemoryChatMemory() {
         return MessageWindowChatMemory.builder()
