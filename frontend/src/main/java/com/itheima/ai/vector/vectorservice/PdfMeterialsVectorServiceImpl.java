@@ -14,35 +14,22 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+//TODO: 任务7.2.2 完成pdf文档化，并写入向量库和中间表
 @Service
 public class PdfMeterialsVectorServiceImpl extends MaterialsVectorServiceImpl{
     @Override
     public void writeToVectorStore(Materials material) {
-        // 1.创建PDF的读取器
-        PagePdfDocumentReader reader = null;
-        try {
-            reader = new PagePdfDocumentReader(
-                    new UrlResource(material.getUrl()), // 文件源
-                    PdfDocumentReaderConfig.builder()
-                            .withPageExtractedTextFormatter(ExtractedTextFormatter.defaults())
-                            .withPagesPerDocument(1) // 每1页PDF作为一个Document
-                            .build()
-            );
-            // 2.读取PDF文档，拆分为Document
-            List<Document> documents = reader.read();
-            documents.forEach(document -> {
-                document.getMetadata().put("id", material.getId());
-                document.getMetadata().put("title", material.getTitle());
-                document.getMetadata().put("url", material.getUrl());
-                documentIdsService.save(
-                        new DocumentIds()
-                                .setSourceId(String.valueOf(material.getId()))
-                                .setDocumentId(document.getId())
-                                .setType("CAMPUSAI_MATERIALS")
-                );
-            });
-            // 3.写入向量库
-            store.add(documents);
+        // 1.创建PDF的读取器 PagePdfDocumentReader
+        //注意！material里获取到的是url的地址字符串，reader里的参数需要UrlResource
+
+        // 2.读取PDF文档，拆分为Document
+        //注意！一个pdf有可能会有多个Document对象，也就是对应多条向量化数据
+        //具体如何拆分，取决于文档的结构，比如高校数据就可以1页一个
+
+        // 3.写入向量库
+
+        // 4.记录向量库的documentId到中间表 document_ids
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

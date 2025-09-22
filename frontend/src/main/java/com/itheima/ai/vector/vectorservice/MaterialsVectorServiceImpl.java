@@ -14,6 +14,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+//TODO 7.2.2 定义抽象类，完成模版代码的开发
 public abstract class MaterialsVectorServiceImpl implements IVectorService {
 
     @Autowired
@@ -24,27 +25,27 @@ public abstract class MaterialsVectorServiceImpl implements IVectorService {
     protected IDocumentIdsService documentIdsService;
     @Override
     public void addDocument(MessageDto messageDto) {
-        Materials materials = materialsService.getById(messageDto.getIds());
-        writeToVectorStore(materials);
+        //获取dto里的messageId，对应Materials表的id
+
+        //查找Materials表，找到后台录入的资料记录
+
+        //模板模式：调子类writeToVectorStore模板方法，交给子类来处理
+
     }
 
     @Override
     public void updateDocument(MessageDto messageDto) {
-        deleteDocument(messageDto);
-        addDocument(messageDto);
+        //先删除，再新增
     }
 
     @Override
     public void deleteDocument(MessageDto messageDto) {
-        String ids = messageDto.getIds();
-        if (StrUtil.isEmpty(ids)){
-            log.warn("ids is null");
-            return;
-        }
-        //拿到旧的向量id
-        List<String> documentIds = documentIdsService.getDocumentIds("CAMPUSAI_MATERIALS", ids);
-        store.delete(documentIds);
-        documentIdsService.deleteBySourceIds("CAMPUSAI_MATERIALS",ids);
+        //从dto中获取Materials的id
+
+        //查中间表得到所有旧的向量id
+
+        //调store的delete删除向量库中的数据
+
     }
 
     protected abstract void writeToVectorStore(Materials materials);
