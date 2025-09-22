@@ -14,14 +14,10 @@ public class VectorServiceFactory {
     @Autowired
     private NoticeVectorServiceImpl noticeVectorService;
 
+    // TODO 任务5.3.2：工厂方法根据messageDto的type返回对应实例
     public IVectorService of(String mesageType) {
-        switch(mesageType) {
-            case "CAMPUSAI_MATERIALS":
-                return materialsVectorService;
-            case "CAMPUSAI_NOTICE":
-                return noticeVectorService;
-            default:
-                return null;
-        }
+        return null;
     }
 }
+
+

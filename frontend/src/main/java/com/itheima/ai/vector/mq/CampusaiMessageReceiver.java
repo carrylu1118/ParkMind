@@ -32,29 +32,16 @@ public class CampusaiMessageReceiver {
     private VectorServiceFactory vectorServiceFactory;
 
     @RabbitHandler
+    //消息队列消费端，接受管理后台的增删改信息，详细参数参考MessageDto对象
+    //TODO 任务5.3.3 处理管理后台传递过来的Rabbitmq消息
     public void processMessage(String message) {
         logger.info("user hit : message={}", message);
 
         MessageDto messageDto = JSON.parseObject(message, MessageDto.class);
+        //根据messageDto.getType()从工厂获取匹配的实现类
 
-        IVectorService vectorService = vectorServiceFactory.of(messageDto.getType());
 
-        switch(messageDto.getOperation()) {
-            case 1:
-                // 添加
-                vectorService.addDocument(messageDto);
-                break;
-            case 2:
-                // 修改
-                vectorService.updateDocument(messageDto);
-                break;
-            case 3:
-                // 删除
-                vectorService.deleteDocument(messageDto);
-                break;
-            default:
-                break;
-        }
+        //根据messageDto.getOperation()，获取操作类型：1-新增，2-修改，3-删除
 
     }
 

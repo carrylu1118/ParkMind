@@ -22,6 +22,7 @@ import java.util.Map;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+//TODO 任务5.3.2 完成校园墙的实现类，对向量数据进行增删改
 public class NoticeVectorServiceImpl implements IVectorService {
 
     @Autowired
@@ -32,42 +33,29 @@ public class NoticeVectorServiceImpl implements IVectorService {
     private IDocumentIdsService documentIdsService;
     @Override
     public void addDocument(MessageDto messageDto) {
-        String ids = messageDto.getIds();
-        if (StrUtil.isEmpty(ids)){
-            log.warn("ids is null");
-            return;
-        }
-        Notice notice = noticeService.getById(ids);
-        Document doc = new Document(notice.getContent(),
-                Map.of("id",notice.getId(),"title",notice.getTitle()));
-        //保存到向量库
-        store.add(List.of(doc));
-        //记录向量库的 document id，后续删除要用
-        documentIdsService.save(
-                new DocumentIds()
-                        .setSourceId(messageDto.getIds())
-                        .setDocumentId(doc.getId())
-                        .setType("CAMPUSAI_NOTICE")
-        );
+        //获取dto里的messageId，对应Notice表的id
+
+        //查找Notice表，找到后台录入的校园墙记录
+
+        //构建Document对象，并调研store的add保存到向量库
+
+        //从上步中的Document对象，获取id（向量库的id）记录到document_ids表，后续删除要用
+
 
     }
 
     @Override
     public void updateDocument(MessageDto messageDto) {
-        deleteDocument(messageDto);
-        addDocument(messageDto);
+        //先删除，再新增
     }
 
     @Override
     public void deleteDocument(MessageDto messageDto) {
-        String ids = messageDto.getIds();
-        if (StrUtil.isEmpty(ids)){
-            log.warn("ids is null");
-            return;
-        }
-        //拿到旧的向量id
-        List<String> documentIds = documentIdsService.getDocumentIds("CAMPUSAI_NOTICE",ids);
-        store.delete(documentIds);
-        documentIdsService.deleteBySourceIds("CAMPUSAI_NOTICE",ids);
+        //从dto中获取Notice的id
+
+        //查中间表得到所有旧的向量id
+
+        //调store的delete删除向量库中的数据
+
     }
 }
