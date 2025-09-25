@@ -30,9 +30,5 @@ public class PdfMeterialsVectorServiceImpl extends MaterialsVectorServiceImpl{
 
         // 4.记录向量库的documentId到中间表 document_ids
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
     }
 }
