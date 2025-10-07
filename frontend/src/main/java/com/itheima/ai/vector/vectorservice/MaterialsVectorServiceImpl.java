@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @Slf4j
-//TODO 7.2.2 定义抽象类，完成模版代码的开发
+//TODO 任务7.2.2 定义抽象类，完成模版代码的开发
 public abstract class MaterialsVectorServiceImpl implements IVectorService {
 
     @Autowired
