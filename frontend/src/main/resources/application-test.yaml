@@ -1,15 +1,17 @@
 spring:
-  profiles:
-    active: local
   data:
     redis:
-      host: 192.168.64.100
+      host: 103.144.2.88
       port: 6379
       client-type: jedis
+      username: default
+      password: ThisIsMyRedisStack
   rabbitmq:
-    host: 192.168.64.100
+    host: 103.144.2.88
     port: 5672
     virtual-host: /
+    username: Myuser
+    password: ThisIsMyRabbit
 
   application:
     name: spring-ai-demo
@@ -44,9 +46,9 @@ spring:
           dimensions: 1024
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.64.100:3306/campusai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://103.144.2.88:3306/campusai?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
     username: root
-    password: root
+    password: ThisIsMyDatabase
 logging:
   level:
     com.itheima: debug
@@ -54,7 +56,7 @@ logging:
 
 
 #canal:
-#  server: 192.168.64.100:11111  # Canal Server地址和端口
+#  server: 103.144.2.88:11111  # Canal Server地址和端口
 #  destination: test     # Canal实例名
 #  batch-size: 1000        # 批量获取大小
 #  retry-count: 20         # 重试次数
