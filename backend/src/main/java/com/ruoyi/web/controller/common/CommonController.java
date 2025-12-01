@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.common;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -85,12 +86,20 @@ public class CommonController
 
     private String upload2Minio(MultipartFile file){
         String name = Seq.getId(Seq.uploadSeqType)+"."+ FilenameUtils.getExtension(file.getOriginalFilename());
+        InputStream inputStream = null;
         try {
+            inputStream = file.getInputStream();
             minioClient.putObject(
-                    MinioConfig.getBucket(), name,file.getInputStream(),file.getSize(),null,null, file.getContentType()
+                    MinioConfig.getBucket(), name,inputStream,file.getSize(),null,null, file.getContentType()
             );
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }finally {
+            try {
+                inputStream.close(); //minio上传完成后，要关闭文件流，否则造成临时文件占用，spring无法自动清除
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
         return name;
     }
