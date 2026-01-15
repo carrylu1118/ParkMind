@@ -8,6 +8,7 @@ import com.itheima.ai.service.IDocumentIdsService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class DocumentIdsServiceImpl extends ServiceImpl<DocumentIdsMapper, Docum
     public List<String> getDocumentIds(String type, String sourceIds) {
         QueryWrapper<DocumentIds> wrapper = new QueryWrapper<>();
         wrapper.eq("type", type);
-        wrapper.in("source_id", sourceIds.split(","));
+        wrapper.in("source_id", Arrays.asList(sourceIds.split(",")));
         List<DocumentIds> documentIds = list(wrapper);
         return documentIds.stream().map(DocumentIds::getDocumentId).toList();
     }
@@ -35,6 +36,6 @@ public class DocumentIdsServiceImpl extends ServiceImpl<DocumentIdsMapper, Docum
         if (StrUtil.isBlank(sourceIds)){
             return ;
         }
-        remove(new QueryWrapper<DocumentIds>().eq("type", type).in("source_id",sourceIds.split(",")));
+        remove(new QueryWrapper<DocumentIds>().eq("type", type).in("source_id", Arrays.asList(sourceIds.split(","))));
     }
 }
