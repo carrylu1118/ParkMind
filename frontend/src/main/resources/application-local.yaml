@@ -35,7 +35,7 @@ spring:
       api-key: ${ALIYUN_API_KEY}
       chat:
         options:
-          model: qwen-plus
+          model: deepseek-v3.1
       embedding:
         options:
           model: text-embedding-v3
