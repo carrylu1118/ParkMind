@@ -10,6 +10,7 @@ import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,8 @@ public class ChatHistoryController {
     //新建会话记录
     @RequestMapping("/create")
     public void create(@RequestBody SpringAiChatRecord record) {
+        record.setCreateTime(LocalDateTime.now());
+        recordService.save(record);
     }
     //获取会话记录列表
     @RequestMapping("/list")

@@ -8,4 +8,8 @@ import java.util.List;
 public interface ISpringAiChatRecordService extends IService<SpringAiChatRecord> {
 
 
+
+
+
+
 }
