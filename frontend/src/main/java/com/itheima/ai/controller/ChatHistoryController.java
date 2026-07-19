@@ -25,24 +25,32 @@ public class ChatHistoryController {
     //新建会话记录
     @RequestMapping("/create")
     public void create(@RequestBody SpringAiChatRecord record) {
+        record.setUserId("1");
         record.setCreateTime(LocalDateTime.now());
         recordService.save(record);
     }
     //获取会话记录列表
     @RequestMapping("/list")
     public List<SpringAiChatRecord> list() {
-        return null;
+        return recordService.lambdaQuery()
+                .orderByDesc(SpringAiChatRecord::getCreateTime)
+                .list();
     }
 
     //获取某个会话的聊天记录
     @GetMapping("/info/{chatId}")
     public List<MessageVO> getChatHistory(@PathVariable("chatId") String chatId) {
-        return null;
+        return chatMemoryRepository.findByConversationId(chatId)
+                .stream()
+                .map(MessageVO::new)
+                .toList();
     }
 
     //删除某个会话
     @GetMapping("/delete/{chatId}")
     public Result deleteChatHistory(@PathVariable("chatId") String chatId) {
+        chatMemoryRepository.deleteByConversationId(chatId);
+        recordService.removeById(chatId);
         return Result.ok();
     }
 
