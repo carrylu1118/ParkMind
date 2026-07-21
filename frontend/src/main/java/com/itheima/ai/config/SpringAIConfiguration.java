@@ -30,14 +30,14 @@ public class SpringAIConfiguration {
     //TODO 多任务共用：ChatClient配置
     @Bean
     public ChatClient serviceChatClient(OpenAiChatModel model,
-                                        ChatMemory chatMemory,
+                                        ChatMemory chatMemory,//TODO 任务2.2.2：修改此处配置为Mysql的聊天记录组件
                                         VectorStore vectorStore,
                                         ClubTools clubTools, RecordTools recodTools
                                         ){
         return ChatClient.builder(model)
                 .defaultAdvisors(
 //                        SimpleLoggerAdvisor.builder().build(),
-                        MessageChatMemoryAdvisor.builder(chatMemory).build(),
+                        MessageChatMemoryAdvisor.builder(chatMemory).build(), //TODO 任务2.2.2：修改此处配置为Mysql的聊天记录组件
                         QuestionAnswerAdvisor.builder(vectorStore)
                                 .searchRequest(
                                         SearchRequest.builder() // 向量检索的请求参数
@@ -51,6 +51,7 @@ public class SpringAIConfiguration {
                 .build();
     }
 
+    // TODO 任务2.2.2：完成此处配置，基于Mysql的聊天记忆组件
     @Bean
     public ChatMemory chatMemory(JdbcChatMemoryRepository chatMemoryRepository) {
         return MessageWindowChatMemory.builder()
