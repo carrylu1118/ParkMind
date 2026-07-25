@@ -1,8 +1,13 @@
 package com.ruoyi.campusai.controller;
 
 import java.util.List;
+
+import com.ruoyi.campusai.service.RabbitSendService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +30,17 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author Shawn
  * @date 2026-07-23
  */
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/campusai/notice")
 public class NoticeController extends BaseController
 {
     private String prefix = "campusai/notice";
 
-    @Autowired
-    private INoticeService noticeService;
+    private final RabbitSendService rabbitSendService;
+
+    private final INoticeService noticeService;
+
 
     @RequiresPermissions("campusai:notice:view")
     @GetMapping()
@@ -86,7 +94,10 @@ public class NoticeController extends BaseController
     @ResponseBody
     public AjaxResult addSave(Notice notice)
     {
-        return toAjax(noticeService.insertNotice(notice));
+        int row = noticeService.insertNotice(notice);
+        //向rabbitMQ中发送消息
+        rabbitSendService.sendAddNotice(notice.getId());
+        return toAjax(row);
     }
 
     /**
@@ -122,6 +133,9 @@ public class NoticeController extends BaseController
     @ResponseBody
     public AjaxResult remove(String ids)
     {
-        return toAjax(noticeService.deleteNoticeByIds(ids));
+        int row = noticeService.deleteNoticeByIds(ids);
+        //向rabbitMQ中发送消息
+        rabbitSendService.sendDeleteNotice(ids);
+        return toAjax(row);
     }
 }
