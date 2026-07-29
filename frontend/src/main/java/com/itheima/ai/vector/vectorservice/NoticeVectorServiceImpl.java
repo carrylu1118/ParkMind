@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-//TODO 任务5.3.2 完成校园墙的实现类，对向量数据进行增删改
 public class NoticeVectorServiceImpl implements IVectorService {
 
     @Autowired
